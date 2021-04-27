@@ -1,0 +1,30 @@
+ARCH = aarch64-linux-gnu
+CC   = $(ARCH)-gcc
+AS   = $(ARCH)-as
+LD   = $(ARCH)-ld
+OBJCPY = $(ARCH)-objcopy
+
+CC_OPT = -nostdlib -Wall -Werror -ffreestanding -ansii -c
+TARGET = kernel8.elf
+
+C_FILES = $(shell find src/ -type f -name '*.c')
+AS_FILES = $(shell find src/ -type f -name '*.S')
+
+C_OBJ = $(C_FILES:.c=.o)
+AS_OBJ = $(AS_FILES:.S=.o)
+OBJ = $(AS_OBJ) $(C_OBJ)
+
+BUILD = build
+
+all: $(TARGET)
+	@printf "DONE\n";
+
+$(TARGET): $(OBJ)
+	$(LD) -T linker.ld $^ -o $(BUILD)/kernel8.elf
+	$(OBJCPY) $(BUILD)/kernel8.elf -O binary $@
+
+%.o: %.S
+	$(AS) $< -o $@
+
+%.o: %.c
+	$(CC) $(CC_OPT) $< -o $@
