@@ -5,7 +5,8 @@ LD   = $(ARCH)-ld
 OBJCPY = $(ARCH)-objcopy
 
 CC_OPT = -nostdlib -Wall -Werror -ffreestanding -ansii -c
-TARGET = kernel8.elf
+TARGET_ELF = kernel8.elf
+TARGET_FINAL = kernel8.img
 
 C_FILES = $(shell find src/ -type f -name '*.c')
 AS_FILES = $(shell find src/ -type f -name '*.S')
@@ -16,12 +17,15 @@ OBJ = $(AS_OBJ) $(C_OBJ)
 
 BUILD = build
 
-all: $(TARGET)
+all: $(TARGET_FINAL)
 	@printf "DONE\n";
 
-$(TARGET): $(OBJ)
-	$(LD) -T linker.ld $^ -o $(BUILD)/kernel8.elf
-	$(OBJCPY) $(BUILD)/kernel8.elf -O binary $@
+$(TARGET_FINAL): $(OBJ)
+	$(LD) -T linker.ld $^ -o $(BUILD)/$(TARGET_ELF)
+	$(OBJCPY) $(BUILD)/$(TARGET_ELF) -O binary $@
+
+clean:
+	rm -f $(OBJ) $(TARGET_ELF) $(TARGET_FINAL)
 
 %.o: %.S
 	$(AS) $< -o $@
