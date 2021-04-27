@@ -1,3 +1,5 @@
+ENTRY(_start)
+
 SECTIONS
 {
 	kernel_start = .;

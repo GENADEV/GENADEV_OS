@@ -4,7 +4,7 @@ AS   = $(ARCH)-as
 LD   = $(ARCH)-ld
 OBJCPY = $(ARCH)-objcopy
 
-CC_OPT = -nostdlib -Wall -Werror -ffreestanding -ansii -c
+CC_OPT = -nostdlib -Wall -Werror -ffreestanding -std=gnu99 -c
 TARGET_ELF = kernel8.elf
 TARGET_FINAL = kernel8.img
 
