@@ -22,7 +22,7 @@ BUILD = build
 all: $(TARGET_FINAL)
 	@printf "DONE\n";
 
-run:
+run: $(TARGET_FINAL)
 	$(QEMU_AARCH64) -M raspi3 -kernel $(TARGET_FINAL) -serial stdio
 
 $(TARGET_FINAL): $(OBJ)
