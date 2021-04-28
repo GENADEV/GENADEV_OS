@@ -24,7 +24,12 @@ _start:
 		mov x0, core_count
 		ldr x1, [x0]	
 		cmp x1, #4 	   //rpi3 should have 4 cores
-		bne 3f		   // If less cores are detected, it's weird. Just quit, might be wrong hardware or something
+		ble 3f		   // If less cores are detected, it's weird. Just quit, might be wrong hardware or something
+		
+		//Setup new stack which is located at _start + 8 bytes
+		ldr x1, =_start + 0x0000FF
+		mov sp, x1
+		
 		bl main		   // Kernel entry point
 	
 	3:
