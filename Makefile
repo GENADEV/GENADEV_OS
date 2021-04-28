@@ -1,24 +1,29 @@
-ARCH = aarch64-linux-gnu
-CC   = $(ARCH)-gcc
-AS   = $(ARCH)-as
-LD   = $(ARCH)-ld
-OBJCPY = $(ARCH)-objcopy
+ARCH	= aarch64-linux-gnu
+CC		= $(ARCH)-gcc
+AS		= $(ARCH)-as
+LD		= $(ARCH)-ld
+OBJCPY	= $(ARCH)-objcopy
 
-CC_OPT = -nostdlib -Wall -Werror -ffreestanding -std=gnu99 -c
-TARGET_ELF = kernel8.elf
-TARGET_FINAL = kernel8.img
+QEMU_AARCH64 = qemu-system-aarch64
 
-C_FILES = $(shell find src/ -type f -name '*.c')
-AS_FILES = $(shell find src/ -type f -name '*.S')
+CC_OPT			= -nostdlib -Wall -Werror -ffreestanding -std=gnu99 -c
+TARGET_ELF		= kernel8.elf
+TARGET_FINAL	= kernel8.img
 
-C_OBJ = $(C_FILES:.c=.o)
-AS_OBJ = $(AS_FILES:.S=.o)
-OBJ = $(AS_OBJ) $(C_OBJ)
+C_FILES		= $(shell find src/ -type f -name '*.c')
+AS_FILES	= $(shell find src/ -type f -name '*.S')
+
+C_OBJ	= $(C_FILES:.c=.o)
+AS_OBJ	= $(AS_FILES:.S=.o)
+OBJ		= $(AS_OBJ) $(C_OBJ)
 
 BUILD = build
 
 all: $(TARGET_FINAL)
 	@printf "DONE\n";
+
+run:
+	$(QEMU_AARCH64) -M raspi3 -kernel $(TARGET_FINAL) -serial stdio
 
 $(TARGET_FINAL): $(OBJ)
 	$(LD) -T linker.ld $^ -o $(BUILD)/$(TARGET_ELF)
