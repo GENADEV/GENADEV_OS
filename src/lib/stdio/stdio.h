@@ -1,7 +1,7 @@
 #ifndef LIB_STDIO_H
 #define LIB_STDIO_H
 
-#include "../../kernel/include/mini_uart.h"
+#include "../../kernel/hardware/uart/mini_uart.h"
 
 /* uart putc */
 void ua_putc(char c);

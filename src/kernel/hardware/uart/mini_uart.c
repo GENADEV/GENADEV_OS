@@ -1,10 +1,18 @@
 // mini uart is the same as uart1
 
-#include "include/gpio.h"
-#include "include/mini_uart.h"
-#include "include/utils.h"
+#include "../gpio/gpio.h"
+#include "mini_uart.h"
+#include "../../utils.h"
+
+mini_uart_status_t status;
 
 void mini_uart_init(void) {
+	
+	if (status.init_true) {
+		return;
+	}
+	status.init_true = true;
+
 	unsigned int selector;
 
 	// GPIO Function select '1'
@@ -54,10 +62,15 @@ char mini_uart_recv(void) {
 	return get32(AUX_MU_IO_REG)&0xFF;
 }
 
-void mini_uart_send(char c) {
+int mini_uart_send(char c) {
+	if (!status.init_true) {
+		return 1;
+	}
+
 	while(!(get32(AUX_MU_LSR_REG)&0x20));
 	
 	put32(AUX_MU_IO_REG, c);
+	return 0;
 }
 
 void mini_uart_send_string(char* str) {

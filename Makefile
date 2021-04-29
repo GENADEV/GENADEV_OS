@@ -23,7 +23,7 @@ all: $(TARGET_FINAL)
 	@printf "DONE\n";
 
 run: $(TARGET_FINAL)
-	$(QEMU_AARCH64) -M raspi3 -kernel $(TARGET_FINAL) -serial null -serial stdio
+	$(QEMU_AARCH64) -M raspi3 -kernel $(TARGET_FINAL) -serial null -serial stdio -d int
 
 $(TARGET_FINAL): $(OBJ)
 	$(LD) -T linker.ld $^ -o $(BUILD)/$(TARGET_ELF)

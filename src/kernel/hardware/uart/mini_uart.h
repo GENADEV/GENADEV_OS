@@ -1,7 +1,14 @@
 #ifndef MINI_UART_H
 #define MINI_UART_H
 
-#include "mmio_base.h"
+#include "../gpio/mmio_base.h"
+#include <stdint.h>
+#include <stdbool.h>
+
+typedef struct
+{
+    bool init_true; //has mini_uart_init been called?
+} mini_uart_status_t;
 
 #define AUX_ENABLES     (MMIO_BASE+0x00215004)
 #define AUX_MU_IO_REG   (MMIO_BASE+0x00215040)
@@ -18,7 +25,7 @@
 
 void mini_uart_init (void);
 char mini_uart_recv (void);
-void mini_uart_send (char c);
+int mini_uart_send (char c);
 void mini_uart_send_string(char* str);
 
 #endif
