@@ -7,7 +7,7 @@
 void mini_uart_init(void) {
 	unsigned int selector;
 
-	// ?
+	// GPIO Function select '1'
 	selector = get32(GPFSEL1);
 	// clean gpio14
 	selector &= ~(7<<12);

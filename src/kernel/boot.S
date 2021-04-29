@@ -11,7 +11,7 @@ _start:
 
 	//For now all but the primary core will be suspended
 	mrs x0, mpidr_el1	     //Multiprocessor Affinity Register
-	and x0, x0, #0x000000FF  //Lower 8 bits indicate the core no.
+	and x0, x0, #0xFF  		 //Lower 8 bits indicate the core no.
 	cbz x0, 2f				 //Is the Core ID == 0? (Main core)
 	bne 1f					 //Stop the core
 
@@ -26,9 +26,13 @@ _start:
 		cmp x1, #4 	   //rpi3 should have 4 cores
 		ble 3f		   // If less cores are detected, it's weird. Just quit, might be wrong hardware or something
 		
-		//Setup new stack which is located at _start + 8 bytes
-		ldr x1, =_start + 0x0000FF
+		//Setup stack
+		ldr x1, =[0x80000]
 		mov sp, x1
+		
+		//Pass the core count to main
+		mov x1, core_count
+		ldr w0, [x1]
 		
 		bl main		   // Kernel entry point
 	

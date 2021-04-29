@@ -6,7 +6,7 @@ OBJCPY	= $(ARCH)-objcopy
 
 QEMU_AARCH64 = qemu-system-aarch64
 
-CC_OPT			= -nostdlib -Wall -Werror -ffreestanding -std=gnu99 -c
+CC_OPT			= -nostdlib -ffreestanding -std=gnu99 -mgeneral-regs-only -c
 TARGET_ELF		= kernel8.elf
 TARGET_FINAL	= kernel8.img
 
