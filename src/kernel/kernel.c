@@ -3,7 +3,6 @@
 #include "int/irq.h"
 
 extern void svc_test();
-extern void switch_el();
 
 void main() {
 	mini_uart_init();
