@@ -4,7 +4,8 @@ SECTIONS
 {
 	kernel_start = .;
 	.text.boot	: { *(.text.boot) }
-	.text		: { *(.text) }
+	.text.interrupts : { *(.text.interrupts) }
+	.text		: { *(.text*) }
 	.rodata		: { *(.rodata) }
 	.data		: { *(.data) }
 	.			= ALIGN(0x8);

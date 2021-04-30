@@ -1,6 +1,4 @@
-/*
-    Todo: Test an interrupt, enable interrupt controller in init_irq, create generic interrupt handler in assembly (check the pending interrupt (IRQ_BASIC_PENDING) using put32, save the return value which is the irq type and handle type of irq (SYSTEM_TIMER_IRQ_1) for testing purposes)
-*/
+.section .text.interrupts
 
 .include "src/kernel/arm-v-8/stack.S"
 .include "src/kernel/arm-v-8/macros.S"
@@ -79,19 +77,22 @@
     eret
 .endm
 
-
 ivt_desc:
     ivt_set_entry undefined_irq_stub
     ivt_set_entry undefined_irq_stub
     ivt_set_entry undefined_irq_stub
     ivt_set_entry undefined_irq_stub
+    
     ivt_set_entry undefined_irq_stub
     ivt_set_entry undefined_irq_stub
     ivt_set_entry undefined_irq_stub
     ivt_set_entry undefined_irq_stub
+    
     ivt_set_entry undefined_irq_stub
     ivt_set_entry undefined_irq_stub
     ivt_set_entry undefined_irq_stub
+    ivt_set_entry undefined_irq_stub
+    
     ivt_set_entry undefined_irq_stub
     ivt_set_entry undefined_irq_stub
     ivt_set_entry undefined_irq_stub
@@ -99,17 +100,21 @@ ivt_desc:
 
 undefined_irq_stub:
     on_interrupt_enter
-    uart_asm_print undefined_irq_msg
-    hang
+    b irq_unknown
+    on_interrupt_exit
 
 .global irq_init
 irq_init:
     adr x0, ivt_desc //temp store
-    msr vbar_el1, x0 //load the ivt descriptor into the Vector-Base-Address-Register
+    msr vbar_el2, x0 //load the ivt descriptor into the Vector-Base-Address-Register (Exception level 2)
     uart_asm_print loaded_irq_msg
     ret
 
+.global svc_test
+svc_test:
+    svc 0
+    ret
+
 .section .data
-    .extern put32
+    .extern irq_unknown
     loaded_irq_msg:  .asciz "Installed IRQ's\n"
-    undefined_irq_msg: .asciz "Undefined interrupt!\n"
