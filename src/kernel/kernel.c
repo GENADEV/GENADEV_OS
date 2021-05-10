@@ -6,6 +6,7 @@
 extern void svc_test();
 
 void main() {
+	// initialize mini uart driver
 	mini_uart_init();
 	
 	debug("GENADEV_OS\n");
@@ -32,8 +33,10 @@ void main() {
 
 
 	/* START OF TEST */
-	debug("START OF - Mailbox test start\n");
+	debug("START OF - mailbox test\n");
 
+	// save all of the needed buffer content which we will pass later into channel 8
+	// specific for the GET BOARD MODEL tag
 	volatile unsigned int  __attribute__((aligned(16))) mb_buffer[36];
 	
 	mb_buffer[0] = 8 * 4;					// total buffer size
