@@ -33,8 +33,8 @@ bss_zero:
     ldr x1, =bss_end
     sub x3, x0, x1
 
-    .loop:
+    1:
         sub x3, x1, x0      //Decrement the counter which specifies when the bss section is all zero
         str xzr, [x0], #8   //clear out a section of bss data in byte sized chunks
-        cbnz x3, .loop      //goto 1 if x3 != 0x0
+        cbnz x3, 1b         //goto 1 if x3 != 0x0
 	ret

@@ -43,7 +43,7 @@ void mini_uart_init(void) {
 	put32(AUX_ENABLES,1);
 	// disable auto flow control and disable receiver and transmitter
 	put32(AUX_MU_CNTL_REG,0);
-	// diable receive and transmit interrupts
+	// disable receive and transmit interrupts
 	put32(AUX_MU_IER_REG,0);
 	// enable 8 bit mode
 	put32(AUX_MU_LCR_REG,3);
