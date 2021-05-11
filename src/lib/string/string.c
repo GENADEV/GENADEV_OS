@@ -29,3 +29,50 @@ int strlen(const char *str)
     }
     return len;
 }
+
+/*
+*   Set n bytes in memory equal to val
+*/
+void *memset(void *src, uint32_t val, size_t n)
+{
+    uint8_t *src_ptr = (uint8_t*)src;
+
+    do
+    {
+        *src_ptr++ = val;
+        n--;
+    } while (n != 0x0);
+
+    return (void *)src;
+}
+
+/*
+*   Copy n bytes from src to dst
+*/
+void *memcpy(void *src, void *dst, int n)
+{
+    //Cast src and dst to uint8_t* to be able to perform arithemtic operations
+    uint8_t *src_ptr = (uint8_t*)src;
+    uint8_t *dst_ptr = (uint8_t*)dst;
+
+    do 
+    {
+        *dst_ptr++ = *src_ptr++;
+        n--;
+    } while (n != 0x0);
+
+    return (void *)dst_ptr;
+}
+
+bool memcmp(void *src, int cmp, int n)
+{
+    
+}
+
+/*
+*   Zero out n bytes of memory
+*/
+void *memzero(void *src, size_t n)
+{
+    memset(src, 0x0, n);
+}

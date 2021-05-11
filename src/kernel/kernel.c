@@ -20,10 +20,10 @@
 
 #include "hardware/uart/mini_uart.h"
 #include "../lib/debug/debug.h"
+#include "../lib/string/string.h"
 #include "int/irq.h"
 #include "arm-v-8/mb/mailbox.h"
-
-extern void svc_test();
+#include "arm-v-8/genadev.h"
 
 void main() {
 	// initialize mini uart driver
@@ -31,10 +31,6 @@ void main() {
 	
 	debug("GENADEV_OS\n");
 
-
-	/* START OF TEST */
-	debug("START OF - interrupts and service test\n");
-	
 	// get current exception level
 	int el = 0;
 	asm volatile(
@@ -45,19 +41,13 @@ void main() {
 	debug("Current EL: %d\n", el);
 
 	irq_init();
-	
-	svc_test();
-
-	debug("END OF - interrutps and service test\n");
-	/* END OF TEST */
-
 
 	/* START OF TEST */
 	debug("START OF - mailbox test\n");
 
 	// save all of the needed buffer content which we will pass later into channel 8
 	// specific for the GET BOARD MODEL tag
-	volatile unsigned int  __attribute__((aligned(16))) mb_buffer[36];
+	uint32_t __section_align *mb_buffer;
 	
 	mb_buffer[0] = 8 * 4;					// total buffer size
 	mb_buffer[1] = MB_REQUEST;				// buffer request
@@ -74,7 +64,7 @@ void main() {
 	}
 	
 	// write the mailbox buffer to channel 8 - property tags
-	mailbox_write(8, (unsigned int*) mb_buffer);
+	mailbox_write(8, mb_buffer);
 
 	// now read from channel 8 - property tags
 	mailbox_read(8);
@@ -90,8 +80,7 @@ void main() {
 		
 	debug("END OF - mailbox test\n");	
 	/* END OF TEST */
-
-
+	
 	// print everything we receive from the mini uart to the mini uart
 	for(;;) {
 		mini_uart_send(mini_uart_recv());

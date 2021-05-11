@@ -18,7 +18,7 @@
  */  \
 
 
-ARCH	= aarch64-linux-gnu
+ARCH	= @aarch64-linux-gnu
 CC		= $(ARCH)-gcc
 AS		= $(ARCH)-as
 LD		= $(ARCH)-ld
@@ -53,7 +53,9 @@ clean:
 	rm -f $(OBJ) $(TARGET_ELF) $(TARGET_FINAL)
 
 %.o: %.S
-	$(AS) $< -o $@
+	@printf " AS\t$<\n";
+	$(AS) -c $< -o $@
 
 %.o: %.c
-	$(CC) $(CC_OPT) $< -o $@
+	@printf " CC\t$<\n";
+	$(CC)  $(CC_OPT) -c $< -o $@

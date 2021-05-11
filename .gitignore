@@ -2,4 +2,4 @@
 *.o
 *.img
 *.bin
-*.json #VScode stuff
+.vscode/**

@@ -130,11 +130,6 @@ irq_init:
     uart_asm_print loaded_irq_msg
     ret
 
-.global svc_test
-svc_test:
-    svc 0
-    ret
-
 .section .data
     .extern irq_unknown
     loaded_irq_msg:  .asciz "Installed IRQ's\n"

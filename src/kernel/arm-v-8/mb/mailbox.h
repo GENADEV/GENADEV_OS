@@ -74,7 +74,7 @@ u8...: padding to align the tag to 32 bits.
 // tags
 #define MB_TAG_GET_BOARD_MODEL	0x10001
 
-unsigned int mailbox_read(unsigned int channel); 
-void mailbox_write(unsigned int channel, unsigned int data);
+unsigned int mailbox_read(unsigned int channel);
+void mailbox_write(unsigned int channel, unsigned int *data);
 
 #endif
