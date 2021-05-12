@@ -23,7 +23,7 @@
 #include "../lib/string/string.h"
 #include "int/irq.h"
 #include "arm-v-8/mb/mailbox.h"
-#include "arm-v-8/genadev.h"
+#include "arm-v-8/genadev_os.h"
 
 void main() {
 	// initialize mini uart driver
