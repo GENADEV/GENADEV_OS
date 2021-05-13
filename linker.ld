@@ -18,7 +18,7 @@
  *
  */
 
-/*ENTRY(_start)*/
+ENTRY(_start)
 
 SECTIONS
 {
