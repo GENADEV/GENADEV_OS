@@ -41,11 +41,6 @@ unsigned int mailbox_read(unsigned int channel) {
 		// shift bits to the right to get the upper 28 bits of the returned data
 		clean_data = *read_data >>= 4;
 
-		debug("mb: MB_READ = 0x%x\n", MB_READ);
-		debug("mb: read_data = 0x%x\n", read_data);
-		debug("mb: read_channel = 0x%x\n", read_channel);
-		debug("mb: clean_data = 0x%x\n", clean_data);
-
 		// check if the read channel equals the desired channel
 		if(read_channel == channel) {
 			return clean_data;
