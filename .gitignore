@@ -3,3 +3,4 @@
 *.img
 *.bin
 .vscode/**
+gnu-arm/

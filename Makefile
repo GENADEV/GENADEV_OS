@@ -17,8 +17,11 @@
  *   \
  */  \
 
+# There are some issues here and there when trying to install an aarch64 cross compiler on different distros so we decided to do it manually
+GNU_ARM_CC = gnu-arm/gcc-arm-10.2-2020.11-x86_64-aarch64-none-elf
+GNU_ARM_CC_TARBALL = gnu-arm/gcc-arm.tar.xz
 
-ARCH	= @aarch64-linux-gnu
+ARCH	= @$(GNU_ARM_CC)/bin/aarch64-none-elf
 CC		= $(ARCH)-gcc
 AS		= $(ARCH)-as
 LD		= $(ARCH)-ld
@@ -26,7 +29,7 @@ OBJCPY	= $(ARCH)-objcopy
 
 QEMU_AARCH64 = qemu-system-aarch64
 
-CC_OPT			= -mcpu=cortex-a53 -nostdlib -ffreestanding -std=gnu99 -mgeneral-regs-only -c
+CC_OPT			= -mcpu=cortex-a53 -nostdlib -ffreestanding -std=gnu99 -mgeneral-regs-only -O2 -c
 TARGET_ELF		= kernel8.elf
 TARGET_FINAL	= kernel8.img
 
@@ -41,6 +44,12 @@ BUILD = build
 
 all: $(TARGET_FINAL)
 	@printf "DONE\n";
+
+setup: $(GNU_ARM_CC_TARBALL)
+	@printf "TAR\t$^\n";
+	@tar -xf $^ -C gnu-arm/
+	@printf "OK\tExtracted tarball archive\n";
+	@printf "Please install the libncurses5 package using your package manager (package name may vary based on your distro, this package name is derived from an apt package manager)\n";
 
 run: $(TARGET_FINAL)
 	$(QEMU_AARCH64) -M raspi3 -kernel $(TARGET_FINAL) -serial null -serial stdio -d int
