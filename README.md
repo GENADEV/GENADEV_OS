@@ -15,7 +15,7 @@
     - qemu
     - qemu-arch-extra
     - make
-    - libncurses5
+    - ncurses
 
 - To run it
   - git clone https://github.com/GENADEV/GENADEV_OS.git --recursive
