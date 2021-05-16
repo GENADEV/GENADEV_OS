@@ -74,7 +74,12 @@ u8...: padding to align the tag to 32 bits.
 // tags
 #define MB_TAG_GET_BOARD_MODEL	0x10001
 
+typedef struct {
+	int status_code;
+}mb_status_t;
+
 unsigned int mailbox_read(unsigned int channel);
 void mailbox_write(unsigned int channel, unsigned int *data);
+mb_status_t mailbox_send(int channel, int buffer_size, int buffer_request, int tag_id, int value_buff_size, int value_buff_response, int value_buff, int end_tag, int padding);
 
 #endif

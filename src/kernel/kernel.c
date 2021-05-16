@@ -25,6 +25,8 @@
 #include "arm-v-8/mb/mailbox.h"
 #include "arm-v-8/genadev_os.h"
 
+__export mb_status_t mb_status;
+
 void main() {
 	// initialize mini uart driver
 	mini_uart_init();
@@ -45,42 +47,18 @@ void main() {
 	/* START OF TEST */
 	debug("START OF - mailbox test\n");
 
-	// save all of the needed buffer content which we will pass later into channel 8
-	// specific for the GET BOARD MODEL tag
-	uint32_t __section_align *mb_buffer;
-	
-	mb_buffer[0] = 8 * 4;					// total buffer size
-	mb_buffer[1] = MB_REQUEST;				// buffer request
-	mb_buffer[2] = MB_TAG_GET_BOARD_MODEL;	// tag identifier 
- 	mb_buffer[3] = 4;						// value buffer size
-	mb_buffer[4] = 0;						// value buffer request/response code 
-	mb_buffer[5] = 0;						// value buffer 
-	mb_buffer[6] = 0;						// end tag 
-	mb_buffer[7] = 0;						// padding
-
-	debug("BEFORE WRITE AND READ\n");
-	for (int i = 0; i < 8; i++) {
-		debug("mailbox[%x] = %x\n", i, mb_buffer[i]);
-	}
-	
-	// write the mailbox buffer to channel 8 - property tags
-	mailbox_write(8, mb_buffer);
-
-	// now read from channel 8 - property tags
-	mailbox_read(8);
-
-	debug("AFTER WRITE AND READ\n");
-	for (int i = 0; i < 8; i++) {
-		debug("mailbox[%x] = %x\n", i, mb_buffer[i]);
-	}
+	mb_status_t stat = mailbox_send(8, 8 * 4, MB_REQUEST, MB_TAG_GET_BOARD_MODEL, 4, 0, 0, 0, 0);
 
 	// check if the the request was successful
-	if(mb_buffer[1] != MB_SUCCESSFUL_RESPONSE)
-		debug("request not successful (0x%x)\n", mb_buffer[1]);
+	if(stat.status_code != MB_SUCCESSFUL_RESPONSE)
+		debug("request not successful (0x%x)\n", stat.status_code);
+	else
+		debug("Request successful!\n");
 		
 	debug("END OF - mailbox test\n");	
 	/* END OF TEST */
-	
+
+
 	// print everything we receive from the mini uart to the mini uart
 	for(;;) {
 		mini_uart_send(mini_uart_recv());

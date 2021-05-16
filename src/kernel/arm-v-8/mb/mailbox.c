@@ -20,6 +20,8 @@
 
 #include "mailbox.h"
 #include "../../../lib/debug/debug.h"
+#include <stdint.h>
+#include "../genadev_os.h"
 
 unsigned int *MB_READ	= (unsigned int *)(MB_BASE + 0x0);
 unsigned int *MB_STATUS	= (unsigned int *)(MB_BASE + 0x18);
@@ -54,4 +56,28 @@ void mailbox_write(unsigned int channel, unsigned int *data) {
 
 	// combine data (28 bits) and channel (4 bits)
 	*MB_WRITE = (data[4] | channel); //NOTE: This method of writing to the mailbox aims to satifsy compiler warnings, though it is untested and may cause UB. If "data[4]" causes any issues, try higher indexes or revert it back to "(unsigned int)data" which is guaranteed to work
+}
+
+mb_status_t mailbox_send(int channel, int buffer_size, int buffer_request, int tag_id, int value_buff_size, int value_buff_response, int value_buff, int end_tag, int padding)
+{
+	mb_status_t local_mb_status;
+
+	//Setup mailbox buffer
+	uint32_t __section_align *mb_buffer;
+	
+	mb_buffer[0] = buffer_size;				// total buffer size
+	mb_buffer[1] = buffer_request;			// buffer request
+	mb_buffer[2] = tag_id;					// tag identifier 
+ 	mb_buffer[3] = value_buff_size;			// value buffer size
+	mb_buffer[4] = value_buff_response;		// value buffer request/response code 
+	mb_buffer[5] = value_buff;				// value buffer 
+	mb_buffer[6] = end_tag;					// end tag 
+	mb_buffer[7] = padding;					// padding
+
+	// Initiate a write request to the target mailbox and parse it's response
+	mailbox_write(8, mb_buffer);
+	mailbox_read(8);
+
+	local_mb_status.status_code = mb_buffer[1];
+	return local_mb_status;
 }
