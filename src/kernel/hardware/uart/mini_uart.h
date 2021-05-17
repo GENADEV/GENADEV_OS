@@ -25,23 +25,18 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-typedef struct
-{
-    bool init_true; //has mini_uart_init been called?
-} mini_uart_status_t;
-
-#define AUX_ENABLES     (MMIO_BASE+0x00215004)
-#define AUX_MU_IO_REG   (MMIO_BASE+0x00215040)
-#define AUX_MU_IER_REG  (MMIO_BASE+0x00215044)
-#define AUX_MU_IIR_REG  (MMIO_BASE+0x00215048)
-#define AUX_MU_LCR_REG  (MMIO_BASE+0x0021504C)
-#define AUX_MU_MCR_REG  (MMIO_BASE+0x00215050)
-#define AUX_MU_LSR_REG  (MMIO_BASE+0x00215054)
-#define AUX_MU_MSR_REG  (MMIO_BASE+0x00215058)
-#define AUX_MU_SCRATCH  (MMIO_BASE+0x0021505C)
-#define AUX_MU_CNTL_REG (MMIO_BASE+0x00215060)
-#define AUX_MU_STAT_REG (MMIO_BASE+0x00215064)
-#define AUX_MU_BAUD_REG	(MMIO_BASE+0x00215068)
+#define AUX_ENABLES     ((uint32_t *) (MMIO_BASE+0x00215004))
+#define AUX_MU_IO_REG   ((uint32_t *) (MMIO_BASE+0x00215040))
+#define AUX_MU_IER_REG  ((uint32_t *) (MMIO_BASE+0x00215044))
+#define AUX_MU_IIR_REG  ((uint32_t *) (MMIO_BASE+0x00215048))
+#define AUX_MU_LCR_REG  ((uint32_t *) (MMIO_BASE+0x0021504C))
+#define AUX_MU_MCR_REG  ((uint32_t *) (MMIO_BASE+0x00215050))
+#define AUX_MU_LSR_REG  ((uint32_t *) (MMIO_BASE+0x00215054))
+#define AUX_MU_MSR_REG  ((uint32_t *) (MMIO_BASE+0x00215058))
+#define AUX_MU_SCRATCH  ((uint32_t *) (MMIO_BASE+0x0021505C))
+#define AUX_MU_CNTL_REG ((uint32_t *) (MMIO_BASE+0x00215060))
+#define AUX_MU_STAT_REG ((uint32_t *) (MMIO_BASE+0x00215064))
+#define AUX_MU_BAUD_REG	((uint32_t *) (MMIO_BASE+0x00215068))
 
 void mini_uart_init (void);
 char mini_uart_recv (void);

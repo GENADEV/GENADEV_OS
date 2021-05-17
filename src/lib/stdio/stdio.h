@@ -23,11 +23,16 @@
 
 #include "../../kernel/hardware/uart/mini_uart.h"
 
+/* mini uart putc */
+void ua_putc1(char c);
+
+/* mini uart puts */
+void ua_puts1(char *s);
+
 /* uart putc */
-void ua_putc(char c);
+void ua_putc0(char c);;
 
 /* uart puts */
-void ua_puts(char *s);
-
+void ua_puts0(char *s);
 
 #endif // LIB_STDIO_H

@@ -38,7 +38,8 @@
 
 void _putchar(char character)
 {
-    ua_putc(character);
+    ua_putc0(character);
+    ua_putc1(character);
 }
 
 // 'ntoa' conversion buffer size, this must be big enough to hold one converted

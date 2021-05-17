@@ -21,10 +21,10 @@
 #ifndef LIB_STRING_H
 #define LIB_STRING_H
 
+#include "../../kernel/arm-v-8/genadev_os.h"
 #include <stdint.h>
 #include <stdlib.h>
 #include <stdbool.h>
-#include "../../kernel/arm-v-8/genadev_os.h"
 
 int strlen(const char *);
 void *memset(void *src, uint32_t val, size_t n);

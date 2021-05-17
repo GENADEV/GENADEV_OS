@@ -18,33 +18,29 @@
  *
  */
 
-#include "../../kernel/hardware/uart/mini_uart.h"
-#include "../../kernel/hardware/uart/uart0.h"
-#include "debug.h"
-#include <stdarg.h>
-#include "../stdio/fmt.h"
-#include "../stdio/stdio.h"
+#ifndef UART0_H 
+#define UART0_H 
 
-//buffer for the formatted string
-const char debug_buff[512];
-int debug(int uart_device, char *fmt, ...)
-{
-    //Only use a device ranging from 0-1 or both
-    if (uart_device > 2 || uart_device < 0)
-        return 1;
-        
-    va_list ap;
-    va_start(ap, fmt);
-    vsnprintf((char*)&debug_buff, -1, fmt, ap);
+#include "../gpio/mmio_base.h"
+#include <stdint.h>
+#include <stdbool.h>
 
-    if (uart_device == 2)
-    {
-        ua_puts1((char*)debug_buff), ua_puts0((char*)debug_buff);
-    }
-    else
-    {
-        (uart_device == 1) ? ua_puts1((char*)debug_buff) : ua_puts0((char*)debug_buff);
-    }
-    va_end(ap);
-    return 0;
-}
+
+// most important UART0 registers
+
+// UART0 base address: 0x3F201000
+#define UART0_DR	((uint32_t *) (MMIO_BASE+0x00201000))
+#define UART0_FR	((uint32_t *) (MMIO_BASE+0x00201018))
+#define UART0_IBRD	((uint32_t *) (MMIO_BASE+0x00201024))
+#define UART0_FBRD	((uint32_t *) (MMIO_BASE+0x00201028))
+#define UART0_LCRH	((uint32_t *) (MMIO_BASE+0x0020102C))
+#define UART0_CR	((uint32_t *) (MMIO_BASE+0x00201030))
+#define UART0_IMSC	((uint32_t *) (MMIO_BASE+0x00201038))
+#define UART0_ICR	((uint32_t *) (MMIO_BASE+0x00201044))
+
+void uart0_init(void);
+char uart0_recv(void);
+int uart0_send(char c);
+void uart0_send_string(char* str);
+
+#endif

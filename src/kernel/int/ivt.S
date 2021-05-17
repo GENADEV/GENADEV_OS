@@ -20,8 +20,8 @@
 
 .section .text.interrupts
 
-.include "src/kernel/arm-v-8/stack.S"
-.include "src/kernel/arm-v-8/macros.S"
+.include "src/kernel/arm-v-8/asm/macros.S"
+.include "src/kernel/arm-v-8/asm/stack.S"
 
 //undefined irq handler (C)
 .extern undefined_irq

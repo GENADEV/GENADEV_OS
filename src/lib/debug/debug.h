@@ -21,7 +21,11 @@
 #ifndef LIB_DEBUG_H
 #define LIB_DEBUG_H
 
+#define DBG_UART0       0
+#define DBG_MINI_UART   1
+#define DBG_BOTH        2
+
 /* uart printf wrapper */
-int debug(char *fmt, ...);
+int debug(int uart_device, char *fmt, ...);
 
 #endif // LIB_DEBUG_H

@@ -18,14 +18,26 @@
  *
  */
 
+#include "../../kernel/hardware/uart/mini_uart.h"
+#include "../../kernel/hardware/uart/uart0.h"
 #include "stdio.h"
 
-void ua_putc(char c)
+void ua_putc0(char c)
 {
-    mini_uart_send(c);
+	uart0_send(c);
 }
 
-void ua_puts(char *s)
+void ua_puts0(char *s)
+{	
+	uart0_send_string(s);
+}
+
+void ua_putc1(char c)
 {
-    mini_uart_send_string(s);
+	mini_uart_send(c);
+}
+
+void ua_puts1(char *s)
+{
+	mini_uart_send_string(s);
 }

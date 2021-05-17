@@ -22,16 +22,17 @@
 
 #include "../gpio/gpio.h"
 #include "mini_uart.h"
+#include "uart0.h"
 #include "../../utils.h"
+#include "../../../lib/debug/debug.h"
 
-mini_uart_status_t status;
+static bool init_called = false;
 
 void mini_uart_init(void) {
-	
-	if (status.init_true) {
+	if (init_called)
 		return;
-	}
-	status.init_true = true;
+	
+	init_called = true;
 
 	unsigned int selector;
 
@@ -45,18 +46,18 @@ void mini_uart_init(void) {
 	selector &= ~(7<<15);
 	// set alt5 for gpio15
 	selector |= 2<<15;
-	// Load selector into GPIO Function Select 1
+	// load selector into GPIO Function Select 1
 	put32(GPFSEL1,selector);
 
-	// Disable pin pull up/down (I think, I'm not actually sure about that, but 0 = off so..)
+	// enable gpio14 and gpio15 
 	put32(GPPUD,0);
 	// delay execution
 	delay(150);
-	// Enable clock0 on both pin 14 and 15
+	// enable clock0 on both pin 14 and 15
 	put32(GPPUDCLK0,(1<<14)|(1<<15));
 	// delay execution
 	delay(150);
-	//Disable clock0 for pin 0?
+	// flush GPIO setup 
 	put32(GPPUDCLK0,0);
 
 	// enable mini uart itself -> access to it's registers
@@ -83,10 +84,6 @@ char mini_uart_recv(void) {
 }
 
 int mini_uart_send(char c) {
-	if (!status.init_true) {
-		return 1;
-	}
-
 	while(!(get32(AUX_MU_LSR_REG)&0x20));
 	
 	put32(AUX_MU_IO_REG, c);

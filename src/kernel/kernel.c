@@ -18,20 +18,20 @@
  *
  */
 
-#include "hardware/uart/mini_uart.h"
-#include "../lib/debug/debug.h"
-#include "../lib/string/string.h"
-#include "int/irq.h"
 #include "arm-v-8/mb/mailbox.h"
 #include "arm-v-8/genadev_os.h"
-
-__export mb_status_t mb_status;
+#include "hardware/uart/mini_uart.h"
+#include "hardware/uart/uart0.h"
+#include "int/irq.h"
+#include "../lib/debug/debug.h"
+#include "../lib/string/string.h"
 
 void main() {
 	// initialize mini uart driver
 	mini_uart_init();
-	
-	debug("GENADEV_OS\n");
+	uart0_init();
+
+	debug(DBG_UART0, "GENADEV_OS\n");
 
 	// get current exception level
 	int el = 0;
@@ -40,27 +40,13 @@ void main() {
 		"lsr %0, %0, 2\n"
 		: "=r"(el)
 	);
-	debug("Current EL: %d\n", el);
+	debug(DBG_UART0, "Current EL: %d\n", el);
 
-	irq_init();
+	irq_init();	
 
-	/* START OF TEST */
-	debug("START OF - mailbox test\n");
-
-	mb_status_t stat = mailbox_send(8, 8 * 4, MB_REQUEST, MB_TAG_GET_BOARD_MODEL, 4, 0, 0, 0, 0);
-
-	// check if the the request was successful
-	if(stat.status_code != MB_SUCCESSFUL_RESPONSE)
-		debug("request not successful (0x%x)\n", stat.status_code);
-	else
-		debug("Request successful!\n");
-		
-	debug("END OF - mailbox test\n");	
-	/* END OF TEST */
-
-
-	// print everything we receive from the mini uart to the mini uart
-	for(;;) {
-		mini_uart_send(mini_uart_recv());
-	}
+	debug(DBG_MINI_UART, "This is only to be seen on the mini uart :)\n");
+	debug(DBG_UART0, "This is only to be seen on uart0 :)\n");
+	debug(DBG_BOTH, "I appear on both the mini and the uart!\n");
+	
+	for(;;){}
 }

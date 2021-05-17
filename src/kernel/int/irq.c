@@ -31,7 +31,7 @@ void irq_unknown()
 		: "=r"(esr), "=r"(elr)
 	);
     
-    debug(
+    debug(DBG_BOTH,
         "************************************\n"
         "Unhandled IRQ:\n"
         "\tesr_el2: 0x%lx\n"
