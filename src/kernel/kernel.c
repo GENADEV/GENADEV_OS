@@ -27,7 +27,7 @@
 #include "../lib/string/string.h"
 
 void main() {
-	// initialize mini uart driver
+	// initialize mini uart and uart0 driver
 	mini_uart_init();
 	uart0_init();
 
