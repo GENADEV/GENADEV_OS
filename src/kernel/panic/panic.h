@@ -18,35 +18,20 @@
  *
  */
 
-#include "arm-v-8/mb/mailbox.h"
-#include "arm-v-8/genadev_os.h"
-#include "arm-v-8/cpu.h"
-#include "hardware/uart/mini_uart.h"
-#include "hardware/uart/uart0.h"
-#include "int/irq.h"
-#include "../lib/debug/debug.h"
-#include "../lib/string/string.h"
-#include "panic/panic.h"
+#ifndef KERNEL_PANIC_H
+#define KERNEL_PANIC_H
 
-void main() {
-	// initialize mini uart and uart0 driver
-	mini_uart_init();
-	uart0_init();
+#include "../arm-v-8/genadev_os.h"
 
-	debug(DBG_UART0, "GENADEV_OS\n");
+#define GET_FRAMEPOINTER() __fp()
 
-	// get current exception level
-	int el = 0;
-	asm volatile(
-		"mrs %0, currentEL\n"
-		"lsr %0, %0, 2\n"
-		: "=r"(el)
-	);
-	debug(DBG_UART0, "Current EL: %d\n", el);
-
-	irq_init();	
-	cpu_info();
-	
-	panic(GET_FRAMEPOINTER(), "Dummy kernel panic (p.s. it's a variadic function %s)", "(No really, it is!)");
-	for(;;){}
+static inline int __fp()
+{
+    int frame_pointer;
+    asm volatile("mov %0, x29\n" : "=g"(frame_pointer));
+    return frame_pointer;
 }
+
+__no_return panic(int frame_ptr, const char *err, ...);
+
+#endif // KERNEL_PANIC_H

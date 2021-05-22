@@ -1,5 +1,26 @@
+/*
+ *   This file is part of an AArch64 hobbyist OS for the Raspberry Pi 3 B+ called GENADEV_OS 
+ *   Everything is openly developed on github: https://github.com/GENADEV/GENADEV_OS
+ *   Copyright (C) 2021  Yves Vollmeier and Tim Thompson
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU General Public License as published by
+ *    the Free Software Foundation, either version 3 of the License, or
+ *    (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *   GNU General Public License for more details.
+ *
+ *   You should have received a copy of the GNU General Public License
+ *   along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
+ */
+
 #include "cpu.h"
 #include "../../lib/debug/debug.h"
+#include "../panic/panic.h"
 
 #define EXPECTED_IMPLEMENTER "Arm Limited"
 
@@ -27,9 +48,11 @@ void cpu_info()
     int revision = (midr) & 0x000000ff;
 
     //Log the information and perform some sanity checks
+    //TODO: Replace these fail notification debug statements with kernel panics because the hardware isn't correct
+
     debug(DBG_BOTH, "Contents of the midr register: 0x%x\n", midr);
-    (implementer == 0x41) ? debug(DBG_BOTH, "Implementer: %s\n", EXPECTED_IMPLEMENTER) : debug(DBG_BOTH, "Unknown implementer: %x (Expected %s)\n", implementer, EXPECTED_IMPLEMENTER);
-    (architecture == 0xf) ? debug(DBG_BOTH, "Architecture: 0x%x\n", architecture) : debug(DBG_BOTH, "Incorrect architecture version 0x%x (Expected 0xf)\n", architecture); //0xf = Architectural features are individually identified in the ID_* registers, see 'ID registers'. (To be added in V01D's next commit)
+    (implementer == 0x41) ? debug(DBG_BOTH, "Implementer: %s\n", EXPECTED_IMPLEMENTER) : panic(GET_FRAMEPOINTER(), "Expected implementer %s, got 0x%x", implementer);
+    (architecture == 0xf) ? debug(DBG_BOTH, "Architecture: 0x%x\n", architecture) : panic(GET_FRAMEPOINTER(), "Expected architecture version 0xf, got 0x%x", architecture);
     debug(DBG_BOTH, "Variant: 0x%x\n", variant);
     debug(DBG_BOTH, "PartNum: 0x%x\n", part_num);
     debug(DBG_BOTH, "Revision: 0x%x\n", revision);

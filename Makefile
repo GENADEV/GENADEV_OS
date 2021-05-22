@@ -29,7 +29,7 @@ OBJCPY	= $(ARCH)-objcopy
 
 QEMU_AARCH64 = qemu-system-aarch64
 
-CC_OPT			= -mcpu=cortex-a53 -nostdlib -ffreestanding -std=gnu99 -mgeneral-regs-only -O2 -c
+CC_OPT			= -fno-omit-frame-pointer -mcpu=cortex-a53 -nostdlib -ffreestanding -std=gnu99 -mgeneral-regs-only -O2 -c
 TARGET_ELF		= kernel8.elf
 TARGET_FINAL	= kernel8.img
 

@@ -18,35 +18,25 @@
  *
  */
 
-#include "arm-v-8/mb/mailbox.h"
-#include "arm-v-8/genadev_os.h"
-#include "arm-v-8/cpu.h"
-#include "hardware/uart/mini_uart.h"
-#include "hardware/uart/uart0.h"
-#include "int/irq.h"
-#include "../lib/debug/debug.h"
-#include "../lib/string/string.h"
-#include "panic/panic.h"
+#include "panic.h"
+#include <stdarg.h>
+#include "../../lib/stdio/fmt.h"
+#include "../../lib/debug/debug.h"
 
-void main() {
-	// initialize mini uart and uart0 driver
-	mini_uart_init();
-	uart0_init();
+char panic_buff[512];
+__no_return panic(int frame_ptr, const char *err, ...)
+{
+    va_list ap;
+    va_start(ap, err);
+    vsnprintf((char*)&panic_buff, -1, err, ap);
 
-	debug(DBG_UART0, "GENADEV_OS\n");
+    debug(DBG_BOTH,
+        "\n---= KERNEL PANIC =---\n"
+        "Fault: %s\n",
+        (char*)panic_buff
+    );
 
-	// get current exception level
-	int el = 0;
-	asm volatile(
-		"mrs %0, currentEL\n"
-		"lsr %0, %0, 2\n"
-		: "=r"(el)
-	);
-	debug(DBG_UART0, "Current EL: %d\n", el);
+    debug(DBG_BOTH, "Frame pointer: 0x%x\n", frame_ptr);
 
-	irq_init();	
-	cpu_info();
-	
-	panic(GET_FRAMEPOINTER(), "Dummy kernel panic (p.s. it's a variadic function %s)", "(No really, it is!)");
-	for(;;){}
+    for (;;);
 }
