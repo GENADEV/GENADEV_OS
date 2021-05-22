@@ -20,6 +20,7 @@
 
 #include "arm-v-8/mb/mailbox.h"
 #include "arm-v-8/genadev_os.h"
+#include "arm-v-8/cpu.h"
 #include "hardware/uart/mini_uart.h"
 #include "hardware/uart/uart0.h"
 #include "int/irq.h"
@@ -43,10 +44,7 @@ void main() {
 	debug(DBG_UART0, "Current EL: %d\n", el);
 
 	irq_init();	
+	cpu_info();
 
-	debug(DBG_MINI_UART, "This is only to be seen on the mini uart :)\n");
-	debug(DBG_UART0, "This is only to be seen on uart0 :)\n");
-	debug(DBG_BOTH, "I appear on both the mini and the uart!\n");
-	
 	for(;;){}
 }
