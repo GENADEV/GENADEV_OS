@@ -48,8 +48,6 @@ void cpu_info()
     int revision = (midr) & 0x000000ff;
 
     //Log the information and perform some sanity checks
-    //TODO: Replace these fail notification debug statements with kernel panics because the hardware isn't correct
-
     debug(DBG_BOTH, "Contents of the midr register: 0x%x\n", midr);
     (implementer == 0x41) ? debug(DBG_BOTH, "Implementer: %s\n", EXPECTED_IMPLEMENTER) : panic(GET_FRAMEPOINTER(), "Expected implementer %s, got 0x%x", implementer);
     (architecture == 0xf) ? debug(DBG_BOTH, "Architecture: 0x%x\n", architecture) : panic(GET_FRAMEPOINTER(), "Expected architecture version 0xf, got 0x%x", architecture);
