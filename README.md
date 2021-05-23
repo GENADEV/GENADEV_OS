@@ -10,12 +10,14 @@
     - qemu-system-arm
     - make
     - libncurses5
+    - astyle
   - Arch based linux distributions:
     - git
     - qemu
     - qemu-arch-extra
     - make
     - ncurses
+    - astyle
 
 - To run it
   - git clone https://github.com/GENADEV/GENADEV_OS.git --recursive
