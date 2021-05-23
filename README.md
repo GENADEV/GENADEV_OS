@@ -22,3 +22,7 @@
   - cd GENADEV_OS
   - make setup (untar the cross compiler)
   - make run   (compile, link and run)
+
+## Contributing
+
+For those interested in contributing, please refer to the [contributing guidelines](https://github.com/GENADEV/GENADEV_OS/blob/main/CONTRIBUTING.md).
