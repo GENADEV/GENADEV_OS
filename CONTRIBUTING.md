@@ -10,7 +10,10 @@ Whilst this project is founded and actively maintained by a German OSDdev group 
 
 ## Coding Style
 
-Most of our developers use a code formatting tool called [Artistic Style](http://astyle.sourceforge.net/).
+Here at [GENADEV](https://github.com/GENADEV/) we make use of the syntax formatting tool [Artistic Style](http://astyle.sourceforge.net/).
+It is expected that you run this tool before committing; the command can be conveniently invoked using ```make format```.
+Commits which have not done this will be rejected.
+
 We use the following rules/arguments: ```--style=allman --indent=force-tab --break-blocks --pad-oper --pad-comma --pad-header --break-one-line-headers --remove-braces --remove-comment-prefix```
 
 **The following informations are from the [official documentation](http://astyle.sourceforge.net/astyle.html).**
