@@ -66,6 +66,9 @@ $(TARGET_FINAL): $(OBJ)
 clean:
 	rm -f $(OBJ) $(TARGET_ELF) $(TARGET_FINAL)
 
+format:
+	astyle --mode=c -nA1TfpxgHxbxjxp $(C_FILES)
+
 %.o: %.S
 	@printf " AS\t$<\n";
 	$(AS) -c $< -o $@
