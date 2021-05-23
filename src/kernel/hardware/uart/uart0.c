@@ -55,7 +55,7 @@ void uart0_init(void)
 	mb_buffer[8] = 0;						// end tag
 
 	// write the mailbox buffer to channel 8 - property tags
-	mailbox_write(8, mb_buffer);
+	mailbox_write(MB_CHANNEL_PROP, mb_buffer);
 
 
 	/* mapping UART0 to GPIO pins */
