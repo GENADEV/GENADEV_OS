@@ -2,6 +2,8 @@
 
 #### _An AArch64 hobbyist OS for the Raspberry Pi 3 B+ made with ❤️ by the [German OSDev & Lang Dev discord server community](https://disboard.org/server/819953014953476126) written in C and AArch64 Assembly_
 
+<a href="https://discord.gg/jPNNeZqMwR"> <img src="https://img.shields.io/discord/819953014953476126"> </a>
+
 ## Emulation on Linux
 
 - Packages you need
