@@ -21,6 +21,7 @@
 #include "arm-v-8/mb/mailbox.h"
 #include "arm-v-8/genadev_os.h"
 #include "arm-v-8/cpu.h"
+#include "hardware/framebuffer/framebuffer.h"
 #include "hardware/uart/mini_uart.h"
 #include "hardware/uart/uart0.h"
 #include "int/irq.h"
@@ -48,7 +49,13 @@ void main()
 	irq_init();
 	cpu_info();
 
-	panic(GET_FRAMEPOINTER(), "Dummy kernel panic (p.s. it's a variadic function %s)", "(No really, it is!)");
+	// panic(GET_FRAMEPOINTER(), "Dummy kernel panic (p.s. it's a variadic function %s)", "(No really, it is!)");
+
+	debug(DBG_BOTH, "0\n");
+	framebuffer_init();
+	debug(DBG_BOTH, "1\n");
+	framebuffer_test();
+	debug(DBG_BOTH, "2\n");
 
 	for (;;) {}
 }

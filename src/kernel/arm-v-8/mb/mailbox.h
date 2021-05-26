@@ -72,8 +72,14 @@ u8...: padding to align the tag to 32 bits.
 #define MB_CHANNEL_PROP    8
 
 // tags
-#define MB_TAG_GET_BOARD_MODEL	0x10001
 #define MB_TAG_SET_CLOCK_RATE	0x38002
+#define MB_TAG_SET_PHYSICAL_DISPLAY_WIDTH_HEIGHT	0x40003
+#define MB_TAG_SET_VIRTUAL_BUFFER_WIDHT_HEIGHT		0x48004
+#define MB_TAG_SET_VIRTUAL_OFFSET					0x40009
+#define MB_TAG_SET_DEPTH							0x48009
+#define MB_TAG_SET_PIXEL_ORDER						0x48005
+#define MB_TAG_ALLOCATE_BUFFER						0x40001
+#define MB_TAG_GET_PITCH							0x40008
 
 typedef struct {
 	int status_code;
