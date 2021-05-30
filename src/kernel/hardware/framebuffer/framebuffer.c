@@ -29,7 +29,7 @@
 	1. Send all the frame buffer specification to property tags channel with a mailbox
 	2. Read from the mailbox and see if the GPU modified the structure and wait if necessary
 	3. Once we have the pointer to the framebuffer we can write to it (note that this is for 32 bit mode):
-		3.1. The address or actually offset of a subpixel is defined as: y * pitch + x * 4
+		3.1. The address or actually offset of a subpixel is defined as: y * pitch + x * bytes_per_pixel
 		3.2. So now we can add this offset we got in 3.1. plus the framebuffer address
 		3.3. We can now write a ARGB color to this memory address we got in 3.2.
 */
@@ -38,7 +38,7 @@
 #include "../../arm-v-8/genadev_os.h"
 #include "framebuffer.h"
 
-unsigned int width, height, pitch;
+unsigned int width, height, pitch, bytes_per_pixel;
 unsigned char *framebuffer;
 
 void framebuffer_init(void)
@@ -84,7 +84,7 @@ void framebuffer_init(void)
 	mb_buffer[21] = MB_TAG_SET_PIXEL_ORDER;						// tag identifier
 	mb_buffer[22] = 4;											// value buffer size
 	mb_buffer[23] = 4;											// value buffer size
-	mb_buffer[24] = 32;											// value buffer | state which can be either 0x0 (BGR) or 0x1 (RGB)
+	mb_buffer[24] = 1;											// value buffer | state which can be either 0x0 (BGR) or 0x1 (RGB)
 
 	mb_buffer[25] = MB_TAG_ALLOCATE_BUFFER;						// tag identifier
 	mb_buffer[26] = 8;											// value buffer size
@@ -110,6 +110,7 @@ void framebuffer_init(void)
 		width = mb_buffer[10];									// get actual physical width
 		height = mb_buffer[11];									// get actual physical height
 		pitch = mb_buffer[33];									// get number of bytes per line or pitch
+		bytes_per_pixel = mb_buffer[20] >> 3;					// get bytes per pixel by converting bits per pixel
 
 		mb_buffer[28] &= 0x3FFFFFFF;							// convert GPU address to ARM address
 		framebuffer = (unsigned char *)((long)mb_buffer[28]);	// get framebuffer address
@@ -117,10 +118,10 @@ void framebuffer_init(void)
 }
 
 // color must be in hexadecimal with 8 digits (4 binary bits = 1 hexadecimal digit -> ARGB (32 bits) = 8 hexadecimal degits)
-void framebuffer_draw_pixel(int x, int y, unsigned int color)
+void framebuffer_draw_pixel(int x, int y, uint32_t color)
 {
-	int offset = (y * pitch) + (x * 4);
-	*((unsigned int*)(framebuffer + offset)) = color;
+	int offset = (y * pitch) + (x * bytes_per_pixel);
+	*((uint32_t*)(framebuffer + offset)) = color;
 }
 
 // test - change the color of all pixels on the screen to 0xFF00FF00

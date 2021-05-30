@@ -51,11 +51,8 @@ void main()
 
 	// panic(GET_FRAMEPOINTER(), "Dummy kernel panic (p.s. it's a variadic function %s)", "(No really, it is!)");
 
-	debug(DBG_BOTH, "0\n");
 	framebuffer_init();
-	debug(DBG_BOTH, "1\n");
 	framebuffer_test();
-	debug(DBG_BOTH, "2\n");
 
 	for (;;) {}
 }

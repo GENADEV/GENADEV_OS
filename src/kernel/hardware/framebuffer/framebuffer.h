@@ -24,7 +24,7 @@
 #include <stdint.h>
 
 void framebuffer_init(void);
-void framebuffer_draw_pixel(int x, int y, unsigned int color);
+void framebuffer_draw_pixel(int x, int y, uint32_t color);
 void framebuffer_test();
 	
 #endif
