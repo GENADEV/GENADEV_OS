@@ -108,18 +108,12 @@ void framebuffer_init(void)
 
 	if (mb_buffer[20] == 32	&& mb_buffer[28] != 0)
 	{
-		mb_buffer[28] &= 0x3FFFFFFF;							// convert GPU address to ARM address
 		width = mb_buffer[10];									// get actual physical width
 		height = mb_buffer[11];									// get actual physical height
 		pitch = mb_buffer[33];									// get number of bytes per line or pitch
 		bytes_per_pixel = mb_buffer[20] >> 3;					// get bytes per pixel by converting bits per pixel
 
-
-		debug(DBG_BOTH, "width: '%x'\n", width);
-		debug(DBG_BOTH, "height: '%x'\n", height);
-		debug(DBG_BOTH, "pitch: '%x'\n", pitch);
-		debug(DBG_BOTH, "bytes_per_pixel: '%x'\n", bytes_per_pixel);
-
+		mb_buffer[28] &= 0x3FFFFFFF;							// convert GPU address to ARM address
 		framebuffer = (unsigned char *)((long)mb_buffer[28]);	// get framebuffer address
 	}
 }
@@ -137,6 +131,6 @@ void framebuffer_test(void)
 	for (int y = 0; y <= height; y++)
 	{
 		for (int x = 0; x <= width; x++)
-			framebuffer_draw_pixel(x, y, 0xFF11AA11);
+			framebuffer_draw_pixel(x, y, 0xFF00FF00);
 	}
 }
