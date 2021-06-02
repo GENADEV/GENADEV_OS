@@ -181,7 +181,7 @@ void framebuffer_draw_circle(int x_centre, int y_centre, int radius, uint32_t co
 
 		if (d > 0)
 		{
-			y += 1;
+			y -= 1;
 			d = d + 4 * (x - y) + 10;
 		}
 		else
