@@ -25,6 +25,8 @@
 
 void framebuffer_init(void);
 void framebuffer_draw_pixel(int x, int y, uint32_t color);
+void framebuffer_draw_line(int x_start_pos, int y_start_pos, int x_end_pos, int y_end_pos, uint32_t color);
+void framebuffer_draw_circle(int x_centre, int y_centre, int radius, uint32_t color);
 void framebuffer_test(void);
 	
 #endif

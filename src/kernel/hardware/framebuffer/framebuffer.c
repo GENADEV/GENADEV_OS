@@ -37,7 +37,6 @@
 #include "../../arm-v-8/mb/mailbox.h"
 #include "../../arm-v-8/genadev_os.h"
 #include "framebuffer.h"
-#include "../../../lib/debug/debug.h"
 
 unsigned int width, height, pitch, bytes_per_pixel;
 unsigned char *framebuffer;
