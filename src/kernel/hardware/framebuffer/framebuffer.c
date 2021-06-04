@@ -37,9 +37,22 @@
 #include "../../arm-v-8/mb/mailbox.h"
 #include "../../arm-v-8/genadev_os.h"
 #include "framebuffer.h"
+#include "font.h"
+#include "font_properties.h"
 
-unsigned int width, height, pitch, bytes_per_pixel;
+#include "../../../lib/debug/debug.h"
+
+unsigned int width;
+unsigned int height;
+unsigned int pitch;
+unsigned int bytes_per_pixel;
+
 unsigned char *framebuffer;
+
+int cursor_x_pos = 0;
+int cursor_y_pos = 0;
+
+uint32_t global_background_color = 0x00FFFFFF;
 
 void framebuffer_init(void)
 {
@@ -124,6 +137,28 @@ void framebuffer_draw_pixel(int x, int y, uint32_t color)
 	*((uint32_t*)(framebuffer + offset)) = color;
 }
 
+// set a global background color + apply it
+void framebuffer_set_background_color(uint32_t background_color)
+{
+	global_background_color = background_color;
+
+	for (int y = 0; y <= height; y++)
+	{
+		for (int x = 0; x <= width; x++)
+			framebuffer_draw_pixel(x, y, global_background_color);
+	}
+}
+
+// set cursor position to standard and also background color to standard
+void framebuffer_reset_screen(void)
+{
+	cursor_x_pos = 0;
+	cursor_y_pos = 0;
+
+	framebuffer_set_background_color(global_background_color);
+}
+
+
 // draw a line to the framebuffer with start coordinates and end coordinates
 void framebuffer_draw_line(int x_start_pos, int y_start_pos, int x_end_pos, int y_end_pos, uint32_t color)
 {
@@ -166,14 +201,14 @@ void draw_circle_helper(int xc, int yc, int x, int y, uint32_t color)
 	framebuffer_draw_pixel(xc - y, yc - x, color);
 }
 
-// draw a circle to the framebuffer with the centre of the circle and the radius
-void framebuffer_draw_circle(int x_centre, int y_centre, int radius, uint32_t color)
+// draw a circle to the framebuffer with the center of the circle and the radius
+void framebuffer_draw_circle(int x_center, int y_center, int radius, uint32_t color)
 {
 	int x = 0;
 	int y = radius;
 	int d = 3 - 2 * radius;
 
-	draw_circle_helper(x_centre, y_centre, x, y, color);
+	draw_circle_helper(x_center, y_center, x, y, color);
 
 	while (y >= x)
 	{
@@ -187,21 +222,92 @@ void framebuffer_draw_circle(int x_centre, int y_centre, int radius, uint32_t co
 		else
 			d = d + 4 * x + 6;
 
-		draw_circle_helper(x_centre, y_centre, x, y, color);
+		draw_circle_helper(x_center, y_center, x, y, color);
 	}
+}
+
+// print one character/glyph to the screen where x/y are the top left corner of the character
+void framebuffer_print_char(char character, int x, int y, uint32_t foreground_color, uint32_t background_color)
+{
+	/*  TODO
+	    if (x + FONT_WIDTH >= width || cursor_x_pos + FONT_WIDTH >= width)
+	    {
+		x = 0;
+		y = y + FONT_HEIGHT;
+
+		cursor_x_pos = x;
+		cursor_y_pos = y;
+	    }
+
+	    if (y >= height || cursor_y_pos >= height))
+	    {
+		y = height - 8;
+
+		cursor_y_pos = y;
+
+		move_all_lines_up(); // TODO
+	    }
+	*/
+
+	switch (character)
+	{
+	case '\n':
+	{
+		cursor_x_pos = 0;
+		cursor_y_pos = y + FONT_HEIGHT;
+		return;
+	}
+
+	case '\t':
+	{
+		cursor_x_pos += 4;
+		return;
+	}
+	}
+
+	int offset = character * FONT_HEIGHT;
+	int line_data;
+	int x_pos;
+	int y_pos;
+	int pixel_color;
+
+	for (int column = 0; column < FONT_HEIGHT; column++)
+	{
+		line_data = font[offset + column];
+
+		for (int row = 0; row < FONT_WIDTH; row++)
+		{
+			x_pos = x + FONT_WIDTH - row;
+			y_pos = y + column;
+
+			pixel_color = ((line_data >> row) & 0x01) ? foreground_color : background_color;
+
+			framebuffer_draw_pixel(x_pos, y_pos, pixel_color);
+		}
+	}
+
+	cursor_x_pos += FONT_WIDTH;
+}
+
+void framebuffer_print_string(char *string, uint32_t foreground_color, uint32_t background_color)
+{
+	while (*string)
+		framebuffer_print_char(*string++, cursor_x_pos, cursor_y_pos, foreground_color, background_color);
 }
 
 // test - change the color of all pixels on the screen to 0xFF00FF00
 void framebuffer_test(void)
 {
-	for (int y = 0; y <= height; y++)
-	{
-		for (int x = 0; x <= width; x++)
-			framebuffer_draw_pixel(x, y, 0xFF00FF00);
-	}
+	framebuffer_set_background_color(0xFF00FF00);
 
-	framebuffer_draw_line(0, 0, 350, 700, 0xFF000000);
-
+	framebuffer_draw_line(100, 100, 350, 700, 0xFF000000);
 	framebuffer_draw_circle(960, 540, 250, 0xFF000000);
 	framebuffer_draw_circle(960, 540, 50, 0xFF000000);
+
+
+	framebuffer_print_char('!', 0, 0, 0xFF000000, 0x00FFFFFF);
+	framebuffer_print_string("Hello World!\nMy name is Tix3Dev.", 0xFF000000, 0x00FFFFFF);
+
+	delay(5000000000);
+	framebuffer_reset_screen();
 }

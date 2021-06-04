@@ -18,18 +18,15 @@
  *
  */
 
-#ifndef FRAMEBUFFER_H
-#define FRAMEBUFFER_H
+#ifndef FONT_PROPERTIES_H 
+#define FONT_PROPERTIES_H
 
-#include <stdint.h>
+enum {
+    FONT_WIDTH				= 8,
+    FONT_HEIGHT				= 8,
+    FONT_BYTES_PER_GLYPH	= 8,
+	FONT_BYTES_PER_LINE		= 1,
+	FONT_NUMBER_OF_GLYPHS	= 128,
+};
 
-void framebuffer_init(void);
-void framebuffer_draw_pixel(int x, int y, uint32_t color);
-void framebuffer_set_background_color(uint32_t background_color);
-void reset_screen(void);
-void framebuffer_draw_line(int x_start_pos, int y_start_pos, int x_end_pos, int y_end_pos, uint32_t color);
-void framebuffer_draw_circle(int x_center, int y_center, int radius, uint32_t color);
-void framebuffer_print_char(char character, int x, int y, uint32_t foreground_color, uint32_t background_color);
-void framebuffer_test(void);
-	
 #endif
