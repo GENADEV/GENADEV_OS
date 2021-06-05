@@ -276,15 +276,15 @@ void framebuffer_print_string(char *string, uint32_t foreground_color, uint32_t 
 // test - change the color of all pixels on the screen to 0xFF00FF00
 void framebuffer_test(void)
 {
-	framebuffer_set_background_color(0xFF00FF00);
+	framebuffer_set_background_color(0xFF27DFF8);
 
-	framebuffer_draw_line(100, 100, 350, 700, 0xFF000000);
-	framebuffer_draw_circle(960, 540, 250, 0xFF000000);
-	framebuffer_draw_circle(960, 540, 50, 0xFF000000);
+	framebuffer_draw_line(100, 100, 350, 700, 0xFFF9AC37);
+	framebuffer_draw_circle(960, 540, 250, 0xFFF9AC37);
+	framebuffer_draw_circle(960, 540, 50, 0xFFF9AC37);
 
 
-	framebuffer_print_char('!', 0, 0, 0xFF000000, 0x00FFFFFF);
-	framebuffer_print_string("Hello World!\nMy name is Tix3Dev.", 0xFF000000, 0x00FFFFFF);
+	framebuffer_print_char('!', 0, 0, 0xFF27DFF8, 0xFFF9AC37);
+	framebuffer_print_string("Hello World!\nMy name is Tix3Dev.", 0xFF27DFF8, 0xFFF9AC37);
 
 	// framebuffer_reset_screen();
 }
