@@ -14,7 +14,7 @@ Here at [GENADEV](https://github.com/GENADEV/) we make use of the syntax formatt
 It is expected that you run this tool before committing; the command can be conveniently invoked using ```make format```.
 Commits which have not done this will be rejected.
 
-We use the following rules/arguments: ```--style=allman --indent=force-tab --break-blocks --pad-oper --pad-comma --pad-header --break-one-line-headers --remove-braces --remove-comment-prefix```
+We use the following rules/arguments: ```--style=allman --indent=force-tab --break-blocks --pad-oper --pad-comma --pad-header --break-one-line-headers --remove-braces --remove-comment-prefix --indent-switches```
 
 **The following informations are from the [official documentation](http://astyle.sourceforge.net/astyle.html).**
 
@@ -175,6 +175,39 @@ We use the following rules/arguments: ```--style=allman --indent=force-tab --bre
       comment line 2
   */
   ```
+
+- --indent-switches
+	Indent 'switch' blocks so that the 'case X:' statements are indented in the switch block. The entire case block is indented.
+
+	```
+	switch (foo)
+	{
+	case 1:
+		a += 1;
+		break;
+
+	case 2:
+	{
+		a += 2;
+		break;
+	}
+	}
+
+	becomes:
+
+	switch (foo)
+	{
+		case 1:
+			a += 1;
+			break;
+
+		case 2:
+		{
+			a += 2;
+			break;
+		}
+	}
+	```
   
 ### Comments
 
