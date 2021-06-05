@@ -229,40 +229,20 @@ void framebuffer_draw_circle(int x_center, int y_center, int radius, uint32_t co
 // print one character/glyph to the screen where x/y are the top left corner of the character
 void framebuffer_print_char(char character, int x, int y, uint32_t foreground_color, uint32_t background_color)
 {
-	/*  TODO
-	    if (x + FONT_WIDTH >= width || cursor_x_pos + FONT_WIDTH >= width)
-	    {
-		x = 0;
-		y = y + FONT_HEIGHT;
-
-		cursor_x_pos = x;
-		cursor_y_pos = y;
-	    }
-
-	    if (y >= height || cursor_y_pos >= height))
-	    {
-		y = height - 8;
-
-		cursor_y_pos = y;
-
-		move_all_lines_up(); // TODO
-	    }
-	*/
-
 	switch (character)
 	{
-	case '\n':
-	{
-		cursor_x_pos = 0;
-		cursor_y_pos = y + FONT_HEIGHT;
-		return;
-	}
+		case '\n':
+		{
+			cursor_x_pos = 0;
+			cursor_y_pos = y + FONT_HEIGHT;
+			return;
+		}
 
-	case '\t':
-	{
-		cursor_x_pos += 4;
-		return;
-	}
+		case '\t':
+		{
+			cursor_x_pos += 4;
+			return;
+		}
 	}
 
 	int offset = character * FONT_HEIGHT;
@@ -308,6 +288,5 @@ void framebuffer_test(void)
 	framebuffer_print_char('!', 0, 0, 0xFF000000, 0x00FFFFFF);
 	framebuffer_print_string("Hello World!\nMy name is Tix3Dev.", 0xFF000000, 0x00FFFFFF);
 
-	delay(5000000000);
-	framebuffer_reset_screen();
+	// framebuffer_reset_screen();
 }
