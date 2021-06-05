@@ -140,9 +140,9 @@ void framebuffer_set_background_color(uint32_t background_color)
 {
 	global_background_color = background_color;
 
-	for (int y = 0; y <= height; y++)
+	for (int y = 0; y < height; y++)
 	{
-		for (int x = 0; x <= width; x++)
+		for (int x = 0; x < width; x++)
 			framebuffer_draw_pixel(x, y, global_background_color);
 	}
 }
@@ -224,6 +224,22 @@ void framebuffer_draw_circle(int x_center, int y_center, int radius, uint32_t co
 	}
 }
 
+// memmove the screen one row up
+void framebuffer_move_one_row_up(void)
+{
+	for (int column = FONT_HEIGHT; column < height; column++)
+	{
+		for (int row = 0; row < width; row++)
+		{
+			int offset = (column * pitch) + (row * bytes_per_pixel);
+			uint32_t current_color = *((uint32_t*)(framebuffer + offset)); 
+
+			int new_offset = ((column - FONT_HEIGHT) * pitch) + (row * bytes_per_pixel);
+			*((uint32_t*)(framebuffer + new_offset)) = current_color;
+		}
+	}	
+}
+
 // print one character/glyph to the screen where x/y are the top left corner of the character
 void framebuffer_print_char(char character, int x, int y, uint32_t foreground_color, uint32_t background_color)
 {
@@ -282,9 +298,17 @@ void framebuffer_test(void)
 	framebuffer_draw_circle(960, 540, 250, 0xFFF9AC37);
 	framebuffer_draw_circle(960, 540, 50, 0xFFF9AC37);
 
-
 	framebuffer_print_char('!', 0, 0, 0xFF27DFF8, 0xFFF9AC37);
-	framebuffer_print_string("Hello World!\nGENADEV_OS is the coolest OS out there!", 0xFF27DFF8, 0xFFF9AC37);
+	framebuffer_print_string("Hello World!\nGENADEV_OS is the coolest OS out there!\n", 0xFF27DFF8, 0xFFF9AC37);
+	framebuffer_print_string("1\n", 0xFF27DFF8, 0xFFF9AC37);
+	framebuffer_print_string("2\n", 0xFF27DFF8, 0xFFF9AC37);
+	framebuffer_print_string("3\n", 0xFF27DFF8, 0xFFF9AC37);
+	framebuffer_print_string("4\n", 0xFF27DFF8, 0xFFF9AC37);
+	framebuffer_print_string("5\n", 0xFF27DFF8, 0xFFF9AC37);
+	framebuffer_print_string("6\n", 0xFF27DFF8, 0xFFF9AC37);
+
+	framebuffer_move_one_row_up();
+	framebuffer_move_one_row_up();
 
 	// framebuffer_reset_screen();
 }
