@@ -40,8 +40,6 @@
 #include "font.h"
 #include "font_properties.h"
 
-#include "../../../lib/debug/debug.h"
-
 unsigned int width;
 unsigned int height;
 unsigned int pitch;
