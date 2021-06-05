@@ -284,7 +284,7 @@ void framebuffer_test(void)
 
 
 	framebuffer_print_char('!', 0, 0, 0xFF27DFF8, 0xFFF9AC37);
-	framebuffer_print_string("Hello World!\nMy name is Tix3Dev.", 0xFF27DFF8, 0xFFF9AC37);
+	framebuffer_print_string("Hello World!\nGENADEV_OS is the coolest OS out there!", 0xFF27DFF8, 0xFFF9AC37);
 
 	// framebuffer_reset_screen();
 }
