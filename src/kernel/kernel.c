@@ -52,7 +52,7 @@ void main()
 	irq_init();
 	cpu_info();
 
-	panic("Dummy kernel panic (p.s. it's a variadic function %s)", "(No really, it is!)");
+	// panic("Dummy kernel panic (p.s. it's a variadic function %s)", "(No really, it is!)");
 
 
 	framebuffer_init();
