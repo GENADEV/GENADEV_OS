@@ -23,8 +23,7 @@
 #include "../../lib/stdio/fmt.h"
 #include "../../lib/debug/debug.h"
 #include <stdint.h>
-
-extern void backtrace_last_10_functions();
+#include "../arm-v-8/cpu.h"
 
 struct stackframe
 {
@@ -51,10 +50,10 @@ __no_return panic(const char *err, ...)
 
 	debug(DBG_BOTH, "Stack trace complete | Halting computer now\n");
 
-	for (;;);
+	relax_cpu();
 }
 
-/* Walk a linked list of (lr, fp) which comprise of the linked list of frame pointers. For more see this awesome stackoverflow answer which I came across: https://stackoverflow.com/questions/15752188/arm-link-register-and-frame-pointer#15752671 */
+/* Walk a linked list of (lr, fp) which comprise the linked list of frame pointers. For more see this awesome stackoverflow answer which I came across: https://stackoverflow.com/questions/15752188/arm-link-register-and-frame-pointer#15752671 */
 void walk_frames(unsigned int MaxFrames)
 {
 	struct stackframe *stk;
