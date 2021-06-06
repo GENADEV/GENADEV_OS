@@ -23,4 +23,6 @@
 
 void cpu_info();
 
+#define relax_cpu() asm("1: nop; wfe; b 1b")
+
 #endif //CPU_H
