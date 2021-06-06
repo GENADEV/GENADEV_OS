@@ -32,6 +32,6 @@ static inline int __fp()
     return frame_pointer;
 }
 
-__no_return panic(int frame_ptr, const char *err, ...);
+__no_return panic(const char *err, ...);
 
 #endif // KERNEL_PANIC_H

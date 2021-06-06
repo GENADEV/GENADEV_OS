@@ -49,8 +49,8 @@ void cpu_info()
 
 	//Log the information and perform some sanity checks
 	debug(DBG_BOTH, "Contents of the midr register: 0x%x\n", midr);
-	(implementer == 0x41) ? debug(DBG_BOTH, "Implementer: %s\n", EXPECTED_IMPLEMENTER) : panic(GET_FRAMEPOINTER(), "Expected implementer %s, got 0x%x", implementer);
-	(architecture == 0xf) ? debug(DBG_BOTH, "Architecture: 0x%x\n", architecture) : panic(GET_FRAMEPOINTER(), "Expected architecture version 0xf, got 0x%x", architecture);
+	(implementer == 0x41) ? debug(DBG_BOTH, "Implementer: %s\n", EXPECTED_IMPLEMENTER) : panic("Expected implementer %s, got 0x%x", implementer);
+	(architecture == 0xf) ? debug(DBG_BOTH, "Architecture: 0x%x\n", architecture) : panic("Expected architecture version 0xf, got 0x%x", architecture);
 	debug(DBG_BOTH, "Variant: 0x%x\n", variant);
 	debug(DBG_BOTH, "PartNum: 0x%x\n", part_num);
 	debug(DBG_BOTH, "Revision: 0x%x\n", revision);
