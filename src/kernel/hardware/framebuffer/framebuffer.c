@@ -40,20 +40,27 @@
 #include "font.h"
 #include "font_properties.h"
 
-unsigned int width;
-unsigned int height;
-unsigned int pitch;
-unsigned int bytes_per_pixel;
+struct GFX_Struct
+{
+	unsigned int width;
+	unsigned int height;
+	unsigned int pitch;
+	unsigned int bytes_per_pixel;
 
-unsigned char *framebuffer;
+	unsigned char *address;
 
-int cursor_x_pos = 0;
-int cursor_y_pos = 0;
+	int cursor_x_pos;
+	int cursor_y_pos;
 
-uint32_t global_background_color = 0x00FFFFFF;
+	uint32_t global_background_color;
+} framebuffer;
 
 void framebuffer_init(void)
 {
+	framebuffer.cursor_x_pos = 0;
+	framebuffer.cursor_y_pos = 0;
+	framebuffer.global_background_color = 0x00FFFFFF;
+
 	// save all of the needed buffer content which we will pass later into channel 8
 	// specific for the following tags
 	// SET PHYSICAL (DISPLAY) WIDTH/HEIGHT
@@ -118,42 +125,42 @@ void framebuffer_init(void)
 
 	if (mb_buffer[20] == 32	&& mb_buffer[28] != 0)
 	{
-		width = mb_buffer[10];									// get actual physical width
-		height = mb_buffer[11];									// get actual physical height
-		pitch = mb_buffer[33];									// get number of bytes per line or pitch
-		bytes_per_pixel = mb_buffer[20] >> 3;					// get bytes per pixel by converting bits per pixel
+		framebuffer.width = mb_buffer[10];									// get actual physical width
+		framebuffer.height = mb_buffer[11];									// get actual physical height
+		framebuffer.pitch = mb_buffer[33];									// get number of bytes per line or pitch
+		framebuffer.bytes_per_pixel = mb_buffer[20] >> 3;					// get bytes per pixel by converting bits per pixel
 
 		mb_buffer[28] &= 0x3FFFFFFF;							// convert GPU address to ARM address
-		framebuffer = (unsigned char *)((long)mb_buffer[28]);	// get framebuffer address
+		framebuffer.address = (unsigned char *)((long)mb_buffer[28]);	// get framebuffer address
 	}
 }
 
 // color must be in hexadecimal with 8 digits (4 binary bits = 1 hexadecimal digit -> ARGB (32 bits) = 8 hexadecimal degits)
 void framebuffer_draw_pixel(int x, int y, uint32_t color)
 {
-	int offset = (y * pitch) + (x * bytes_per_pixel);
-	*((uint32_t*)(framebuffer + offset)) = color;
+	int offset = (y * framebuffer.pitch) + (x * framebuffer.bytes_per_pixel);
+	*((uint32_t*)(framebuffer.address + offset)) = color;
 }
 
 // set a global background color + apply it
 void framebuffer_set_background_color(uint32_t background_color)
 {
-	global_background_color = background_color;
+	framebuffer.global_background_color = background_color;
 
-	for (int y = 0; y < height; y++)
+	for (int y = 0; y < framebuffer.height; y++)
 	{
-		for (int x = 0; x < width; x++)
-			framebuffer_draw_pixel(x, y, global_background_color);
+		for (int x = 0; x < framebuffer.width; x++)
+			framebuffer_draw_pixel(x, y, framebuffer.global_background_color);
 	}
 }
 
 // set cursor position to standard and also background color to standard
 void framebuffer_reset_screen(void)
 {
-	cursor_x_pos = 0;
-	cursor_y_pos = 0;
+	framebuffer.cursor_x_pos = 0;
+	framebuffer.cursor_y_pos = 0;
 
-	framebuffer_set_background_color(global_background_color);
+	framebuffer_set_background_color(framebuffer.global_background_color);
 }
 
 
@@ -227,16 +234,16 @@ void framebuffer_draw_circle(int x_center, int y_center, int radius, uint32_t co
 // memmove the screen one row up
 void framebuffer_move_one_row_up(void)
 {
-	for (int column = FONT_HEIGHT; column < height; column++)
+	for (int column = FONT_HEIGHT; column < framebuffer.height; column++)
 	{
-		for (int row = 0; row < width; row++)
+		for (int row = 0; row < framebuffer.width; row++)
 		{
-			int offset = (column * pitch) + (row * bytes_per_pixel);
-			uint32_t current_color = *((uint32_t*)(framebuffer + offset));
-			*((uint32_t*)(framebuffer + offset)) = global_background_color;
+			int offset = (column * framebuffer.pitch) + (row * framebuffer.bytes_per_pixel);
+			uint32_t current_color = *((uint32_t*)(framebuffer.address + offset));
+			*((uint32_t*)(framebuffer.address + offset)) = framebuffer.global_background_color;
 
-			int new_offset = ((column - FONT_HEIGHT) * pitch) + (row * bytes_per_pixel);
-			*((uint32_t*)(framebuffer + new_offset)) = current_color;
+			int new_offset = ((column - FONT_HEIGHT) * framebuffer.pitch) + (row * framebuffer.bytes_per_pixel);
+			*((uint32_t*)(framebuffer.address + new_offset)) = current_color;
 		}
 	}
 }
@@ -244,20 +251,20 @@ void framebuffer_move_one_row_up(void)
 // print one character/glyph to the screen where x/y are the top left corner of the character
 void framebuffer_print_char(char character, int x, int y, uint32_t foreground_color, uint32_t background_color)
 {
-	if (x + FONT_WIDTH >= width || cursor_x_pos + FONT_WIDTH >= width)
+	if (x + FONT_WIDTH >= framebuffer.width || framebuffer.cursor_x_pos + FONT_WIDTH >= framebuffer.width)
 	{
 		x = 0;
 		y += FONT_HEIGHT;
-		cursor_x_pos = x;
-		cursor_y_pos = y;
+		framebuffer.cursor_x_pos = x;
+		framebuffer.cursor_y_pos = y;
 	}
 
-	if (y >= height || cursor_y_pos >= height)
+	if (y >= framebuffer.height || framebuffer.cursor_y_pos >= framebuffer.height)
 	{
 		x = 0;
-		y = height - FONT_HEIGHT;
-		cursor_x_pos = x;
-		cursor_y_pos = y;
+		y = framebuffer.height - FONT_HEIGHT;
+		framebuffer.cursor_x_pos = x;
+		framebuffer.cursor_y_pos = y;
 		framebuffer_move_one_row_up();
 	}
 
@@ -265,14 +272,14 @@ void framebuffer_print_char(char character, int x, int y, uint32_t foreground_co
 	{
 		case '\n':
 		{
-			cursor_x_pos = 0;
-			cursor_y_pos = y + FONT_HEIGHT;
+			framebuffer.cursor_x_pos = 0;
+			framebuffer.cursor_y_pos = y + FONT_HEIGHT;
 			return;
 		}
 
 		case '\t':
 		{
-			cursor_x_pos += 4;
+			framebuffer.cursor_x_pos += 4;
 			return;
 		}
 	}
@@ -298,13 +305,13 @@ void framebuffer_print_char(char character, int x, int y, uint32_t foreground_co
 		}
 	}
 
-	cursor_x_pos += FONT_WIDTH;
+	framebuffer.cursor_x_pos += FONT_WIDTH;
 }
 
 void framebuffer_print_string(char *string, uint32_t foreground_color, uint32_t background_color)
 {
 	while (*string)
-		framebuffer_print_char(*string++, cursor_x_pos, cursor_y_pos, foreground_color, background_color);
+		framebuffer_print_char(*string++, framebuffer.cursor_x_pos, framebuffer.cursor_y_pos, foreground_color, background_color);
 }
 
 // test - change the color of all pixels on the screen to 0xFF00FF00
@@ -327,8 +334,8 @@ void framebuffer_test(void)
 
 	framebuffer_print_string("123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890", 0xFF27DFF8, 0xFFF9AC37);
 
-	cursor_x_pos = 0;
-	cursor_y_pos = 1073;
+	framebuffer.cursor_x_pos = 0;
+	framebuffer.cursor_y_pos = 1073;
 
 	while (1 == 1)
 	{
