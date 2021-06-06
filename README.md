@@ -4,6 +4,10 @@
 
 <a href="https://discord.gg/jPNNeZqMwR"> <img src="https://img.shields.io/discord/819953014953476126?label=discord"> </a>
 
+## Screenshots
+<img src="https://github.com/GENADEV/GENADEV_OS/blob/main/screenshots/uart%20output.png"> </a>
+<img src="https://github.com/GENADEV/GENADEV_OS/blob/main/screenshots/framebuffer.png"> </a>
+
 ## Emulation on Linux
 
 - Packages you need
