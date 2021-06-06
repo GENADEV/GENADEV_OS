@@ -255,7 +255,7 @@ void framebuffer_print_char(char character, int x, int y, uint32_t foreground_co
 	if (y >= height || cursor_y_pos >= height)
 	{
 		x = 0;
-		y = height - 8;
+		y = height - FONT_HEIGHT;
 		cursor_x_pos = x;
 		cursor_y_pos = y;
 		framebuffer_move_one_row_up();
