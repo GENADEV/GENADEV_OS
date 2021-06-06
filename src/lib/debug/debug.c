@@ -25,11 +25,11 @@
 #include "../stdio/fmt.h"
 #include "../stdio/stdio.h"
 
-//buffer for the formatted string
+// buffer for the formatted string
 const char debug_buff[512];
 int debug(int uart_device, char *fmt, ...)
 {
-	//Only use a device ranging from 0-1 or both
+	// Only use a device ranging from 0-1 or both
 	if (uart_device > 2 || uart_device < 0)
 		return 1;
 

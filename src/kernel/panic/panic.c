@@ -26,9 +26,10 @@
 
 extern void backtrace_last_10_functions();
 
-struct stackframe {
-  struct stackframe* fp;
-  uint32_t lr;
+struct stackframe
+{
+	struct stackframe* fp;
+	uint32_t lr;
 };
 
 void walk_frames(unsigned int MaxFrames);
@@ -46,23 +47,25 @@ __no_return panic(const char *err, ...)
 		  (char*)panic_buff
 		 );
 
-     walk_frames(10);
+	walk_frames(10);
 
-     debug(DBG_BOTH, "Stack trace complete | Halting computer now\n");
-     for (;;);
+	debug(DBG_BOTH, "Stack trace complete | Halting computer now\n");
+
+	for (;;);
 }
 
 /* Walk a linked list of (lr, fp) which comprise of the linked list of frame pointers. For more see this awesome stackoverflow answer which I came across: https://stackoverflow.com/questions/15752188/arm-link-register-and-frame-pointer#15752671 */
 void walk_frames(unsigned int MaxFrames)
 {
-     struct stackframe *stk;
-     asm ("mov %0, x29\n" : "=g"(stk));
+	struct stackframe *stk;
+	asm ("mov %0, x29\n" : "=g"(stk));
 
-     debug(DBG_BOTH, "Stack trace: \n");
-     for(uint32_t frame = 0; stk && frame < MaxFrames; ++frame)
-     {
-          // Unwind to previous stack frame
-          debug(DBG_BOTH, " (%d) _unknown_: 0x%x     \n", frame, stk->lr);
-          stk = stk->fp;
-     }
+	debug(DBG_BOTH, "Stack trace: \n");
+
+	for (uint32_t frame = 0; stk && frame < MaxFrames; ++frame)
+	{
+		// Unwind to previous stack frame
+		debug(DBG_BOTH, " (%d) _unknown_: 0x%x     \n", frame, stk->lr);
+		stk = stk->fp;
+	}
 }

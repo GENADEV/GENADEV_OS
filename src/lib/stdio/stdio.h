@@ -21,8 +21,6 @@
 #ifndef LIB_STDIO_H
 #define LIB_STDIO_H
 
-#include "../../kernel/hardware/uart/mini_uart.h"
-
 /* mini uart putc */
 void ua_putc1(char c);
 
@@ -34,5 +32,8 @@ void ua_putc0(char c);;
 
 /* uart puts */
 void ua_puts0(char *s);
+
+/* print formatted string to the framebuffer with ability to set the color of the text */
+int printk(uint32_t foreground_color, uint32_t background_color, char *fmt, ...);
 
 #endif // LIB_STDIO_H

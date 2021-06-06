@@ -26,6 +26,7 @@
 #include "hardware/uart/uart0.h"
 #include "int/irq.h"
 #include "../lib/debug/debug.h"
+#include "../lib/stdio/stdio.h"
 #include "../lib/string/string.h"
 #include "panic/panic.h"
 
@@ -56,7 +57,11 @@ void main()
 
 
 	framebuffer_init();
-	framebuffer_test();
+	// framebuffer_test();
+
+	framebuffer_set_background_color(0xFF27DFF8);
+
+	printk(0xFF27DFF8, 0xFFF9AC37, "Hello World! My name is: %s.", "Tix3Dev");
 
 	for (;;) {}
 }

@@ -18,9 +18,12 @@
 
 */
 
+#include "../../kernel/hardware/framebuffer/framebuffer.h"
 #include "../../kernel/hardware/uart/mini_uart.h"
 #include "../../kernel/hardware/uart/uart0.h"
 #include "stdio.h"
+#include <stdarg.h>
+#include "../stdio/fmt.h"
 
 void ua_putc0(char c)
 {
@@ -40,4 +43,18 @@ void ua_putc1(char c)
 void ua_puts1(char *s)
 {
 	mini_uart_send_string(s);
+}
+
+// buffer for the formatted string
+const char printk_buff[512];
+int printk(uint32_t foreground_color, uint32_t background_color, char *fmt, ...)
+{
+	va_list ap;
+	va_start(ap, fmt);
+	vsnprintf((char*)&printk_buff, -1, fmt, ap);
+
+	framebuffer_print_string((char*)printk_buff, foreground_color, background_color);
+
+	va_end(ap);
+	return 0;
 }
