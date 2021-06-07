@@ -26,6 +26,7 @@
 
 //print a formatted string to the mini uart
 .macro uart_asm_print string
-    adr x0, \string
+    ldr x0, =0x2
+    adr x1, \string
     b debug
 .endm
