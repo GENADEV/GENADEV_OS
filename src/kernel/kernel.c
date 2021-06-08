@@ -1,3 +1,4 @@
+
 /*
      This file is part of an AArch64 hobbyist OS for the Raspberry Pi 3 B+ called GENADEV_OS
      Everything is openly developed on github: https://github.com/GENADEV/GENADEV_OS
@@ -29,6 +30,8 @@
 #include "../lib/stdio/stdio.h"
 #include "../lib/string/string.h"
 #include "panic/panic.h"
+#include "mm/vmm.h"
+#include "smp/spinlock.h"
 
 void main()
 {
@@ -53,9 +56,12 @@ void main()
 	irq_init();
 	cpu_info();
 
-	// panic("Dummy kernel panic (p.s. it's a variadic function %s)", "(No really, it is!)");
+	bool lock = 0;
+	aquire_lock(&lock);
+	// Peform time sensitive operations
+	release_lock(&lock);
 
-
+	// vmm_init();
 	framebuffer_init();
 	// framebuffer_test();
 
