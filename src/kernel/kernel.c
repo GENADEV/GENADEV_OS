@@ -59,6 +59,7 @@ void main()
 	bool lock = 0;
 	aquire_lock(&lock);
 	// Peform time sensitive operations
+	debug(DBG_BOTH, "Hello from inside the spinlock\n");
 	release_lock(&lock);
 
 	// vmm_init();
