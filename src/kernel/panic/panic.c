@@ -50,7 +50,8 @@ __no_return panic(const char *err, ...)
 
 	debug(DBG_BOTH, "Stack trace complete | Halting computer now\n");
 
-	relax_cpu();
+	for (;;)
+		relax_cpu();	
 }
 
 /* Walk a linked list of (lr, fp) which comprise the linked list of frame pointers. For more see this awesome stackoverflow answer which I came across: https://stackoverflow.com/questions/15752188/arm-link-register-and-frame-pointer#15752671 */
