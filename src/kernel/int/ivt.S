@@ -1,7 +1,7 @@
 /*
  *   This file is part of an AArch64 hobbyist OS for the Raspberry Pi 3 B+ called GENADEV_OS 
  *   Everything is openly developed on github: https://github.com/GENADEV/GENADEV_OS
- *   Copyright (C) 2021  Yves Vollmeier and Tim Thompson
+ *   Copyright (C) 2021  Yves Vollmeier, Tim Thompson and Michael Buch
  *
  *    This program is free software: you can redistribute it and/or modify
  *    it under the terms of the GNU General Public License as published by
@@ -134,8 +134,8 @@ undefined_exception_stub:
 
 .global irq_init
 irq_init:
-    adr x0, ivt_desc
-    msr vbar_el2, x0
+    adr x0, ivt_desc //temp store
+    msr vbar_el1, x0
     uart_asm_print loaded_irq_msg
     ret
 
