@@ -1,7 +1,7 @@
 /*
  *   This file is part of an AArch64 hobbyist OS for the Raspberry Pi 3 B+ called GENADEV_OS 
  *   Everything is openly developed on github: https://github.com/GENADEV/GENADEV_OS
- *   Copyright (C) 2021  Yves Vollmeier and Tim Thompson
+ *   Copyright (C) 2021  Yves Vollmeier, Tim Thompson and Michael Buch
  *
  *    This program is free software: you can redistribute it and/or modify
  *    it under the terms of the GNU General Public License as published by
@@ -19,7 +19,7 @@
  */
 
 enable_instruction_caching:
-    mrs x0, sctlr_el2
+    mrs x0, sctlr_el1
     orr x0, x0, #(1 << 12)
-    msr sctlr_el2, x0
+    msr sctlr_el1, x0
     ret
