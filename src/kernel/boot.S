@@ -28,7 +28,7 @@ _start:
     /* For now all but the primary core will be suspended */
     mrs x0, mpidr_el1   // Multiprocessor Affinity Register
     and x0, x0, #0xFF   // Lower 8 bits indicate the core no.
-    cbz x0, drop_to_el1 // Is the Core ID == 0? (Main core)
+    cbz x0, drop_to_el2 // Is the Core ID == 0? (Main core)
     b hang              // Stop the core
 
 drop_to_el2:
