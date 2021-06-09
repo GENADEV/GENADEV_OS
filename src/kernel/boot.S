@@ -31,16 +31,16 @@ _start:
     cbz x0, 1f        //Is the Core ID == 0? (Main core)
     b hang            //Stop the core
 
-	/* Main core is the only thing executing useful code from here on */
-	1:
-    	//Setup stack
-    	ldr x1, =[0x80000]
-    	mov sp, x1
+    /* Main core is the only thing executing useful code from here on */
+    1:
+        //Setup stack
+        ldr x1, =[0x80000]
+        mov sp, x1
 
-    	bl bss_zero // Zero out bss
-    	bl main     // Kernel entry point
+        bl bss_zero // Zero out bss
+        bl main     // Kernel entry point
 
-    	b hang
+        b hang
 
 bss_zero:
     //Get size of bss section
