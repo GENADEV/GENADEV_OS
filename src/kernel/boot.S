@@ -59,9 +59,6 @@ drop_to_el1:
     mov x1, #0x3c4        // D=1, A=1, I=1, F=1 M=EL1t
     msr spsr_el2, x1
 
-    mov x3, #0x3000000    // Disable floating-point, SVE
-    msr cpacr_el1, x1
-
     adr x1, el1_entry
     msr elr_el2, x1
     eret
@@ -77,10 +74,10 @@ bss_zero:
     adr x0, bss_begin
     adr x1, bss_end
     sub x1, x1, x0
-    2:
+    1:
         str xzr, [x0], #8
         subs x1, x1, #8
-        b.gt 2b
+        b.gt 1b
     ret
 
 hang:
