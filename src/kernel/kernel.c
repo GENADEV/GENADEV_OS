@@ -70,5 +70,7 @@ void main()
 
 	printk(0xFF27DFF8, 0xFFF9AC37, "Hello World! My name is: %s.", "Tix3Dev");
 
-	for (;;) {}
+	for (;;) {
+		asm volatile ("wfi");
+	}
 }
