@@ -47,15 +47,15 @@ bss_zero:
     ldr x0, =bss_begin
     ldr x1, =bss_end
     sub x3, x0, x1
-2:
-    // Decrement the counter which specifies when
-    // the bss section is all zero
-    sub x3, x1, x0
-
-    // Clear out a section of bss data in byte sized chunks
-    str xzr, [x0], #8
-    bgt 2b
-    ret
+    2:
+        // Decrement the counter which specifies when
+        // the bss section is all zero
+        sub x3, x1, x0
+    
+        // Clear out a section of bss data in byte sized chunks
+        str xzr, [x0], #8
+        bgt 2b
+        ret
 
 hang:
     b hang
