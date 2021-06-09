@@ -14,6 +14,7 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
      
     Author: Tim Thompson <https://github.com/V01D-NULL>
+    Contributor: Michael Buch <https://github.com/Michael137>
 */
 
 .section .text.interrupts
@@ -96,38 +97,61 @@
 .endm
 
 ivt_desc:
-    ivt_set_entry undefined_irq_stub
-    ivt_set_entry undefined_irq_stub
-    ivt_set_entry undefined_irq_stub
-    ivt_set_entry undefined_irq_stub
-    
-    ivt_set_entry undefined_irq_stub
-    ivt_set_entry undefined_irq_stub
-    ivt_set_entry undefined_irq_stub
-    ivt_set_entry undefined_irq_stub
-    
-    ivt_set_entry undefined_irq_stub
-    ivt_set_entry undefined_irq_stub
-    ivt_set_entry undefined_irq_stub
-    ivt_set_entry undefined_irq_stub
-    
-    ivt_set_entry undefined_irq_stub
-    ivt_set_entry undefined_irq_stub
-    ivt_set_entry undefined_irq_stub
-    ivt_set_entry undefined_irq_stub
+    /* Exception taken from current EL with SP_EL0 */
+    ivt_set_entry undefined_exception_stub // Synchronous
+    ivt_set_entry irq_stub                 // IRQ/vIRQ
+    ivt_set_entry undefined_exception_stub // FIQ/vFIQ
+    ivt_set_entry undefined_exception_stub // SError/vSError
 
-undefined_irq_stub:
+    /* Exception taken from current EL with SP_ELx, x > 1 */
+    ivt_set_entry undefined_exception_stub // Synchronous
+    ivt_set_entry irq_stub                 // IRQ/vIRQ
+    ivt_set_entry undefined_exception_stub // FIQ/vFIQ
+    ivt_set_entry undefined_exception_stub // SError/vSError
+
+    /* Exception taken from lower EL and EL immediately lower
+       than target is using AArch64 */
+    ivt_set_entry undefined_exception_stub // Synchronous
+    ivt_set_entry irq_stub                 // IRQ/vIRQ
+    ivt_set_entry undefined_exception_stub // FIQ/vFIQ
+    ivt_set_entry undefined_exception_stub // SError/vSError
+
+     /* Exception taken from lower EL and EL immediately lower
+        than target is using AArch32 */
+    ivt_set_entry undefined_exception_stub // Synchronous
+    ivt_set_entry irq_stub                 // IRQ/vIRQ
+    ivt_set_entry undefined_exception_stub // FIQ/vFIQ
+    ivt_set_entry undefined_exception_stub // SError/vSError
+
+irq_stub:
     on_interrupt_enter
-    b irq_unknown
+    bl handle_irq
     on_interrupt_exit
+
+undefined_exception_stub:
+    on_interrupt_enter
+    mrs x0, CurrentEL
+    read_el_reg x1 esr
+    read_el_reg x2 elr
+    bl handle_undefined_exception
+    on_interrupt_exit
+
+.global irq_enable
+irq_enable:
+    msr DAIFClr, #2
+    ret
+
+.global irq_disable
+irq_disable:
+    msr DAIFSet, #2
+    ret
 
 .global irq_init
 irq_init:
     adr x0, ivt_desc //temp store
-    msr vbar_el1, x0 //load the ivt descriptor into the Vector-Base-Address-Register (Exception level 2)
+    msr vbar_el1, x0
     uart_asm_print loaded_irq_msg
     ret
 
 .section .data
-    .extern irq_unknown
     loaded_irq_msg:  .asciz "Installed IRQ's\n"
