@@ -51,11 +51,13 @@ setup: $(GNU_ARM_CC_TARBALL)
 	@printf "OK\tExtracted tarball archive\n";
 	@printf "Please install the libncurses5 package using your package manager (package name may vary based on your distro, this package name is derived from an apt package manager)\n";
 
-run0: $(TARGET_FINAL)
+run: run_uart0
+
+run_uart0: $(TARGET_FINAL)
 	@printf "Keep in mind: Qemu is using the uart device\n";
 	$(QEMU_AARCH64) -M raspi3 -kernel $(TARGET_FINAL) -serial stdio -d int
 
-run1: $(TARGET_FINAL)
+run_uart1: $(TARGET_FINAL)
 	@printf "Keep in mind: Qemu is using the mini-uart device\n";
 	$(QEMU_AARCH64) -M raspi3 -kernel $(TARGET_FINAL) -serial null -serial stdio -d int
 
