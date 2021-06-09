@@ -23,6 +23,13 @@
 
 void cpu_info();
 
+/* Cycle the cpu for (4 * 'cycles') cycles */
+#define cycle_wait4(cycles) ({            \
+        for (int i = 0; i < cycles; i++) \
+        {                                \
+            asm volatile("isb");         \
+        }                                \
+})
 #define relax_cpu() asm("1: nop; wfe; b 1b")
 
 #endif //CPU_H
