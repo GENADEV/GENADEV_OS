@@ -30,6 +30,7 @@
   - cd GENADEV_OS
   - make setup (untar the cross compiler)
   - make run   (compile, link and run)
+  - By default `make run` will use the uart0 for debugging output, you can change this to use the mini uart aswell via `make run_uart1`
 
 ## Contributing
 
