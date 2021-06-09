@@ -59,6 +59,9 @@ drop_to_el1:
     mov x1, #0x3c4        // D=1, A=1, I=1, F=1 M=EL1t
     msr spsr_el2, x1
 
+    mov x3, #(3 << 20)    // Disable floating-point, SVE
+    msr cpacr_el1, x1
+
     adr x1, el1_entry
     msr elr_el2, x1
     eret
