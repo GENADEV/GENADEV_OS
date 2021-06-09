@@ -54,6 +54,8 @@ void main()
 	debug(DBG_BOTH, "Current EL: %d\n", el);
 
 	irq_init();
+	irq_enable();
+
 	cpu_info();
 
 	bool lock = 0;
