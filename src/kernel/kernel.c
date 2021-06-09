@@ -24,6 +24,7 @@
 #include "arm-v-8/cpu.h"
 #include "hardware/framebuffer/framebuffer.h"
 #include "hardware/uart/mini_uart.h"
+#include "hardware/timer/timer.h"
 #include "hardware/uart/uart0.h"
 #include "int/irq.h"
 #include "../lib/debug/debug.h"
@@ -54,6 +55,7 @@ void main()
 	debug(DBG_BOTH, "Current EL: %d\n", el);
 
 	irq_init();
+	timer_init();
 	irq_enable();
 
 	cpu_info();
@@ -72,7 +74,7 @@ void main()
 
 	printk(0xFF27DFF8, 0xFFF9AC37, "Hello World! My name is: %s.", "Tix3Dev");
 
-	for (;;) {
-		asm volatile ("wfi");
+	for (;;)
+	{
 	}
 }

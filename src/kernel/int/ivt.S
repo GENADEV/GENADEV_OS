@@ -100,36 +100,41 @@
 ivt_desc:
     /* Exception taken from current EL with SP_EL0 */
     ivt_set_entry undefined_exception_stub // Synchronous
-    ivt_set_entry undefined_exception_stub // IRQ/vIRQ
+    ivt_set_entry irq_stub                 // IRQ/vIRQ
     ivt_set_entry undefined_exception_stub // FIQ/vFIQ
     ivt_set_entry undefined_exception_stub // SError/vSError
 
     /* Exception taken from current EL with SP_ELx, x > 1 */
     ivt_set_entry undefined_exception_stub // Synchronous
-    ivt_set_entry undefined_exception_stub // IRQ/vIRQ
+    ivt_set_entry irq_stub                 // IRQ/vIRQ
     ivt_set_entry undefined_exception_stub // FIQ/vFIQ
     ivt_set_entry undefined_exception_stub // SError/vSError
 
     /* Exception taken from lower EL and EL immediately lower
        than target is using AArch64 */
     ivt_set_entry undefined_exception_stub // Synchronous
-    ivt_set_entry undefined_exception_stub // IRQ/vIRQ
+    ivt_set_entry irq_stub                 // IRQ/vIRQ
     ivt_set_entry undefined_exception_stub // FIQ/vFIQ
     ivt_set_entry undefined_exception_stub // SError/vSError
 
      /* Exception taken from lower EL and EL immediately lower
         than target is using AArch32 */
     ivt_set_entry undefined_exception_stub // Synchronous
-    ivt_set_entry undefined_exception_stub // IRQ/vIRQ
+    ivt_set_entry irq_stub                 // IRQ/vIRQ
     ivt_set_entry undefined_exception_stub // FIQ/vFIQ
     ivt_set_entry undefined_exception_stub // SError/vSError
+
+irq_stub:
+    on_interrupt_enter
+    bl handle_irq
+    on_interrupt_exit
 
 undefined_exception_stub:
     on_interrupt_enter
     mrs x0, CurrentEL
     read_el_reg x1 esr
     read_el_reg x2 elr
-    b handle_undefined_exception
+    bl handle_undefined_exception
     on_interrupt_exit
 
 .global irq_init
