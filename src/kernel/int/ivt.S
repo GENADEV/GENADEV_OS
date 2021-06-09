@@ -126,7 +126,7 @@ undefined_irq_stub:
 .global irq_init
 irq_init:
     adr x0, ivt_desc //temp store
-    msr vbar_el1, x0 //load the ivt descriptor into the Vector-Base-Address-Register (Exception level 2)
+    msr vbar_el1, x0
     uart_asm_print loaded_irq_msg
     ret
 
