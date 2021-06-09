@@ -44,8 +44,8 @@ _start:
 
 bss_zero:
     //Get size of bss section
-    ldr x0, = bss_begin
-    ldr x1, = bss_end
+    ldr x0, =bss_begin
+    ldr x1, =bss_end
     sub x3, x0, x1
 2:
     // Decrement the counter which specifies when
