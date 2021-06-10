@@ -42,9 +42,6 @@ void main()
 
 	debug(DBG_BOTH, "GENADEV_OS\n");
 
-	debug(DBG_UART0, "Hello World from UART0!\n");
-	debug(DBG_MINI_UART, "Hello World from MINI UART!\n");
-
 	// get current exception level
 	int el = 0;
 	asm volatile(
