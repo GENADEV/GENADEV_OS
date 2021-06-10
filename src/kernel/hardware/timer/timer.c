@@ -24,7 +24,7 @@
 
 #define MILLISECONDS_IN_SECONDS 1000
 
-static uint32_t s_counterFrequency = 0;
+static uint64_t s_counterFrequency = 0;
 
 // In milliseconds
 static uint32_t s_tickInterval = 1000;
@@ -53,7 +53,7 @@ void timer_init(uint32_t ms_interval)
 {
 	asm volatile("mrs %0, cntfrq_el0" : "=r"(s_counterFrequency));
 
-	s_tickInterval = ((uint64_t)s_counterFrequency * ms_interval) / MILLISECONDS_IN_SECONDS;
+	s_tickInterval = (s_counterFrequency * ms_interval) / MILLISECONDS_IN_SECONDS;
 
 	kassert(s_counterFrequency > 0 && s_tickInterval > 0);
 
