@@ -14,7 +14,7 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
      
     Author: Tim Thompson <https://github.com/V01D-NULL>
-	Contributor: Michael Buch <https://github.com/Michael137>
+    Contributor: Michael Buch <https://github.com/Michael137>
 */
 
 #include "irq.h"

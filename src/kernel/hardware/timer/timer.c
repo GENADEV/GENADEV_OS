@@ -13,7 +13,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
      
-	Author: Michael Buch <https://github.com/Michael137>
+    Author: Michael Buch <https://github.com/Michael137>
 */
 
 #include "timer.h"
