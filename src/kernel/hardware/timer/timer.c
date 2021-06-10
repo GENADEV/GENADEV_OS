@@ -53,7 +53,7 @@ void timer_init(uint32_t ms_interval)
 {
 	asm volatile("mrs %0, cntfrq_el0" : "=r"(s_counterFrequency));
 
-	s_tickInterval = s_counterFrequency * (ms_interval / MILLISECONDS_IN_SECONDS);
+	s_tickInterval = ((uint64_t)s_counterFrequency * ms_interval) / MILLISECONDS_IN_SECONDS;
 
 	kassert(s_counterFrequency > 0 && s_tickInterval > 0);
 
