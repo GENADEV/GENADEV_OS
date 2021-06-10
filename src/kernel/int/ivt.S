@@ -153,15 +153,5 @@ irq_init:
     uart_asm_print loaded_irq_msg
     ret
 
-.global irq_enable
-irq_enable:
-    msr DAIFClr, #2
-    ret
-
-.global irq_disable
-irq_disable:
-    msr DAIFSet, #2
-    ret
-
 .section .data
     loaded_irq_msg:  .asciz "Installed IRQ's\n"
