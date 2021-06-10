@@ -42,7 +42,7 @@
 #define CNTHPIRQ_CTL (1 << 2)
 #define CNTVIRQ_CTL (1 << 3)
 
-void timer_init(void);
+void timer_init(uint32_t ms_interval);
 void handle_timer_irq(void);
 
 #endif	// _H
