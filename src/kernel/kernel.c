@@ -31,6 +31,7 @@
 #include "panic/panic.h"
 #include "mm/vmm.h"
 #include "smp/spinlock.h"
+#include "../lib/assert.h"
 
 void main()
 {
@@ -55,19 +56,11 @@ void main()
 	irq_init();
 	cpu_info();
 
-	bool lock = 0;
-	aquire_lock(&lock);
-	// Peform time sensitive operations
-	debug(DBG_BOTH, "Hello from inside the spinlock\n");
-	release_lock(&lock);
-
-	// vmm_init();
 	framebuffer_init();
-	// framebuffer_test();
-
 	framebuffer_set_background_color(0xFF27DFF8);
-
 	printk(0xFF27DFF8, 0xFFF9AC37, "Hello World! My name is: %s.", "Tix3Dev");
+
+	kassert(1 > 2);
 
 	for (;;) {}
 }

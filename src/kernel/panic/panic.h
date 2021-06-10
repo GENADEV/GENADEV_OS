@@ -31,5 +31,6 @@ static inline int __fp()
 }
 
 __no_return panic(const char *err, ...);
+int assertion_failure(const char *err, ...);
 
 #endif // KERNEL_PANIC_H
