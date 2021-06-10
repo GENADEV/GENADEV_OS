@@ -249,7 +249,9 @@ They have to follow the following structure:
 
 ```[fix] y``` for stuff that you had to change in order to make something work
 
-```[doc] z``` for changes in the documentation
+```[refactor] z``` for stuff that you changed in order to make it better
+
+```[doc] v``` for changes in the documentation
 
 ## Communication
 

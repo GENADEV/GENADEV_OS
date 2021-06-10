@@ -1,21 +1,21 @@
-#*   This file is part of an AArch64 hobbyist OS for the Raspberry Pi 3 B+ called GENADEV_OS \
- *   Everything is openly developed on github: https://github.com/GENADEV/GENADEV_OS \
- *   Copyright (C) 2021  Yves Vollmeier and Tim Thompson \
- *   \
- *   This program is free software: you can redistribute it and/or modify \
- *   it under the terms of the GNU General Public License as published by \
- *   the Free Software Foundation, either version 3 of the License, or \
- *   (at your option) any later version. \
- *   \
- *   This program is distributed in the hope that it will be useful, \
- *   but WITHOUT ANY WARRANTY; without even the implied warranty of \
- *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the \
- *   GNU General Public License for more details. \
- *   \
- *   You should have received a copy of the GNU General Public License \
- *   along with this program.  If not, see <https://www.gnu.org/licenses/>. \
- *   \
- */  \
+#/*																							\
+    This file is part of an AArch64 hobbyist OS for the Raspberry Pi 3 B+ called GENADEV_OS \
+    Everything is openly developed on github: https://github.com/GENADEV/GENADEV_OS 		\
+    Copyright (C) 2021  GENADEV_OS and it's affiliates 										\
+     This program is free software: you can redistribute it and/or modify 					\
+     it under the terms of the GNU General Public License as published by 					\
+     the Free Software Foundation, either version 3 of the License, or 						\
+     (at your option) any later version.								 					\
+     This program is distributed in the hope that it will be useful, 						\
+     but WITHOUT ANY WARRANTY; without even the implied warranty of 						\
+     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the 							\
+    GNU General Public License for more details. 											\
+    You should have received a copy of the GNU General Public License 						\
+    along with this program.  If not, see <https://www.gnu.org/licenses/>.				 	\
+    																						\
+    Author: Tim Thompson <https://github.com/V01D-NULL>										\
+*/
+
 
 # There are some issues here and there when trying to install an aarch64 cross compiler on different distros so we decided to do it manually
 GNU_ARM_CC = gnu-arm/gcc-arm-10.2-2020.11-x86_64-aarch64-none-elf
@@ -51,11 +51,13 @@ setup: $(GNU_ARM_CC_TARBALL)
 	@printf "OK\tExtracted tarball archive\n";
 	@printf "Please install the libncurses5 package using your package manager (package name may vary based on your distro, this package name is derived from an apt package manager)\n";
 
-run0: $(TARGET_FINAL)
+run: run_uart0
+
+run_uart0: $(TARGET_FINAL)
 	@printf "Keep in mind: Qemu is using the uart device\n";
 	$(QEMU_AARCH64) -M raspi3 -kernel $(TARGET_FINAL) -serial stdio -d int
 
-run1: $(TARGET_FINAL)
+run_uart1: $(TARGET_FINAL)
 	@printf "Keep in mind: Qemu is using the mini-uart device\n";
 	$(QEMU_AARCH64) -M raspi3 -kernel $(TARGET_FINAL) -serial null -serial stdio -d int
 
