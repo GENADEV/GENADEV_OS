@@ -18,19 +18,19 @@
 */
 
 
-#include "arm-v-8/mb/mailbox.h"
-#include "arm-v-8/genadev_os.h"
-#include "arm-v-8/cpu.h"
-#include "hardware/framebuffer/framebuffer.h"
-#include "hardware/uart/mini_uart.h"
-#include "hardware/uart/uart0.h"
-#include "int/irq.h"
-#include "../lib/debug/debug.h"
-#include "../lib/stdio/stdio.h"
-#include "../lib/string/string.h"
-#include "panic/panic.h"
-#include "mm/vmm.h"
-#include "smp/spinlock.h"
+#include <kernel/arm-v-8/mb/mailbox.h>
+#include <kernel/arm-v-8/genadev_os.h>
+#include <kernel/arm-v-8/cpu.h>
+#include <kernel/hardware/framebuffer/framebuffer.h>
+#include <kernel/hardware/uart/mini_uart.h>
+#include <kernel/hardware/uart/uart0.h>
+#include <kernel/int/irq.h>
+#include <lib/debug/debug.h>
+#include <lib/stdio/stdio.h>
+#include <lib/string/string.h>
+#include <kernel/panic/panic.h>
+#include <kernel/mm/vmm.h>
+#include <kernel/smp/spinlock.h>
 
 void main()
 {

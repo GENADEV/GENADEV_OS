@@ -41,8 +41,11 @@ AS_OBJ	= $(AS_FILES:.S=.o)
 OBJ		= $(AS_OBJ) $(C_OBJ)
 
 BUILD = build
+INCLUDE_FILES=$(shell find src/ -type f -name '*.h')
+INCLUDE_DEST=$(BUILD)/include
+INCLUDE_DEST_FILES=$(patsubst src/%.h, $(INCLUDE_DEST)/%.h, $(INCLUDE_FILES))
 
-all: $(TARGET_FINAL)
+all: build-headers $(TARGET_FINAL)
 	@printf "DONE\n";
 
 setup: $(GNU_ARM_CC_TARBALL)
@@ -50,6 +53,14 @@ setup: $(GNU_ARM_CC_TARBALL)
 	@tar -xf $^ -C gnu-arm/
 	@printf "OK\tExtracted tarball archive\n";
 	@printf "Please install the libncurses5 package using your package manager (package name may vary based on your distro, this package name is derived from an apt package manager)\n";
+
+.PHONY: build-headers
+build-headers: $(INCLUDE_DEST_FILES)
+
+$(INCLUDE_DEST)/%.h: src/%.h
+	@mkdir -p "$(@D)"
+	@echo Copying "$<" to "$@"
+	cp "$<" "$@"
 
 run: run_uart0
 
@@ -66,7 +77,8 @@ $(TARGET_FINAL): $(OBJ)
 	$(OBJCPY) $(BUILD)/$(TARGET_ELF) -O binary $@
 
 clean:
-	rm -f $(OBJ) $(TARGET_ELF) $(TARGET_FINAL)
+	@rm -f $(OBJ) $(TARGET_ELF) $(TARGET_FINAL)
+	@rm -rf $(INCLUDE_DEST)
 
 format:
 	astyle --mode=c -nA1TfpxgHxbxjxpS $(C_FILES)
@@ -77,4 +89,4 @@ format:
 
 %.o: %.c
 	@printf " CC\t$<\n";
-	$(CC)  $(CC_OPT) -c $< -o $@
+	$(CC) -I$(INCLUDE_DEST) $(CC_OPT) -c $< -o $@
