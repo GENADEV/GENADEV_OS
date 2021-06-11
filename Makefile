@@ -59,7 +59,6 @@ build-headers: $(INCLUDE_DEST_FILES)
 
 $(INCLUDE_DEST)/%.h: src/%.h
 	@mkdir -p "$(@D)"
-	@echo Copying "$<" to "$@"
 	cp "$<" "$@"
 
 run: run_uart0

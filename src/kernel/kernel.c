@@ -23,13 +23,15 @@
 #include <kernel/hardware/framebuffer/framebuffer.h>
 #include <kernel/hardware/uart/mini_uart.h>
 #include <kernel/hardware/uart/uart0.h>
+#include <kernel/hardware/timer/timer.h>
 #include <kernel/int/irq.h>
-#include <lib/debug/debug.h>
-#include <lib/stdio/stdio.h>
-#include <lib/string/string.h>
 #include <kernel/panic/panic.h>
 #include <kernel/mm/vmm.h>
 #include <kernel/smp/spinlock.h>
+#include <lib/assert.h>
+#include <lib/debug/debug.h>
+#include <lib/stdio/stdio.h>
+#include <lib/string/string.h>
 
 void main()
 {
