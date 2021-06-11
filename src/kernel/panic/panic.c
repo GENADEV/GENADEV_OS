@@ -53,6 +53,26 @@ __no_return panic(const char *err, ...)
 		relax_cpu();	
 }
 
+int assertion_failure(const char *err, ...)
+{
+	va_list ap;
+	va_start(ap, err);
+	vsnprintf((char*)&panic_buff, -1, err, ap);
+
+	debug(DBG_BOTH,
+		  "\n---= Assertion failure =---\n"
+		  "Fault: %s\n\n",
+		  (char*)panic_buff
+		 );
+
+	walk_frames(10);
+
+	debug(DBG_BOTH, "Stack trace complete | Halting computer now\n");
+
+	for (;;)
+		relax_cpu();
+}
+
 /* Walk a linked list of (lr, fp) which comprise the linked list of frame pointers. For more see this awesome stackoverflow answer which I came across: https://stackoverflow.com/questions/15752188/arm-link-register-and-frame-pointer#15752671 */
 void walk_frames(unsigned int MaxFrames)
 {

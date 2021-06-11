@@ -17,7 +17,6 @@
 	Contributers: All of the GENADEV_OS Contributers (tysm ^^) (Do not edit this section)
 */
 
-
 #include <kernel/arm-v-8/mb/mailbox.h>
 #include <kernel/arm-v-8/genadev_os.h>
 #include <kernel/arm-v-8/cpu.h>
@@ -40,9 +39,6 @@ void main()
 
 	debug(DBG_BOTH, "GENADEV_OS\n");
 
-	debug(DBG_UART0, "Hello World from UART0!\n");
-	debug(DBG_MINI_UART, "Hello World from MINI UART!\n");
-
 	// get current exception level
 	int el = 0;
 	asm volatile(
@@ -53,21 +49,16 @@ void main()
 	debug(DBG_BOTH, "Current EL: %d\n", el);
 
 	irq_init();
+	timer_init(1000);
+	irq_enable();
+
 	cpu_info();
 
-	bool lock = 0;
-	aquire_lock(&lock);
-	// Peform time sensitive operations
-	debug(DBG_BOTH, "Hello from inside the spinlock\n");
-	release_lock(&lock);
-
-	// vmm_init();
 	framebuffer_init();
-	// framebuffer_test();
-
 	framebuffer_set_background_color(0xFF27DFF8);
-
 	printk(0xFF27DFF8, 0xFFF9AC37, "Hello World! My name is: %s.", "Tix3Dev");
+
+	kassert(1 > 2);
 
 	for (;;) {}
 }
