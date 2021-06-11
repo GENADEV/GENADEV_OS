@@ -68,7 +68,7 @@ $(TARGET_FINAL): $(OBJ)
 	$(OBJCPY) $(BUILD)/$(TARGET_ELF) -O binary $@
 
 clean:
-	@rm -f $(OBJ) $(TARGET_ELF) $(TARGET_FINAL)
+	rm -f $(OBJ) $(TARGET_ELF) $(TARGET_FINAL)
 
 format:
 	astyle --mode=c -nA1TfpxgHxbxjxpS $(C_FILES)
