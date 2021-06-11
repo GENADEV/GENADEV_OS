@@ -29,7 +29,9 @@ OBJCPY	= $(ARCH)-objcopy
 
 QEMU_AARCH64 = qemu-system-aarch64
 
-CC_OPT			= -mno-outline-atomics -fno-omit-frame-pointer -mcpu=cortex-a53 -nostdlib -ffreestanding -std=gnu99 -mgeneral-regs-only -O2 -c
+INCLUDEDIR=src
+
+CC_OPT			= -mno-outline-atomics -fno-omit-frame-pointer -mcpu=cortex-a53 -nostdlib -ffreestanding -std=gnu99 -mgeneral-regs-only -O2 -c -I$(INCLUDEDIR)
 TARGET_ELF		= kernel8.elf
 TARGET_FINAL	= kernel8.img
 
@@ -77,4 +79,4 @@ format:
 
 %.o: %.c
 	@printf " CC\t$<\n";
-	$(CC)  $(CC_OPT) -c $< -o $@
+	$(CC) $(CC_OPT) -c $< -o $@
