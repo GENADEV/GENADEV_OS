@@ -12,7 +12,7 @@
     GNU General Public License for more details.
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
-     
+
     Authors: The GENADEV_OS Founder Yves Vollmeier <https://github.com/Tix3Dev> and the lead developer Tim Thompson <https://github.com/V01D-NULL>
 	Contributers: All of the GENADEV_OS Contributers (tysm ^^) (Do not edit this section)
 */
