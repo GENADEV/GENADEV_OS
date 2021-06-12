@@ -2,5 +2,6 @@
 *.o
 *.img
 *.bin
+qemu.log
 .vscode/**
 gnu-arm
