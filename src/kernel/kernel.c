@@ -58,7 +58,7 @@ void main()
 
 	framebuffer_init();
 	framebuffer_set_background_color(0xFF27DFF8);
-	printk(0xFF27DFF8, 0xFFF9AC37, "Hello World! My name is: %s.", "Tix3Dev");
+	printk(0xFF27DFF8, 0xFFF9AC37, "Hello World! The coolest OS out there is obviously %s.", "GENADEV_OS");
 
 	kassert(1 > 2);
 
