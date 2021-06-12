@@ -40,7 +40,7 @@ AS_FILES	= $(shell find src/ -type f -name '*.S')
 
 C_OBJ	= $(C_FILES:.c=.o)
 AS_OBJ	= $(AS_FILES:.S=.o)
-OBJ		= $(AS_OBJ) $(C_OBJ)
+OBJ		= $(C_OBJ) $(AS_OBJ)
 
 BUILD = build
 
@@ -57,11 +57,11 @@ run: run_uart0
 
 run_uart0: $(TARGET_FINAL)
 	@printf "Keep in mind: Qemu is using the uart device\n";
-	$(QEMU_AARCH64) -M raspi3 -kernel $(TARGET_FINAL) -serial stdio -d int
+	$(QEMU_AARCH64) -M raspi3 -kernel $(TARGET_FINAL) -serial stdio -d int -D qemu.log -vnc :1
 
 run_uart1: $(TARGET_FINAL)
 	@printf "Keep in mind: Qemu is using the mini-uart device\n";
-	$(QEMU_AARCH64) -M raspi3 -kernel $(TARGET_FINAL) -serial null -serial stdio -d int
+	$(QEMU_AARCH64) -M raspi3 -kernel $(TARGET_FINAL) -serial null -serial stdio -d int -D qemu.log -vnc :1
 
 $(TARGET_FINAL): $(OBJ)
 	$(LD) -T linker.ld $^ -o $(BUILD)/$(TARGET_ELF)

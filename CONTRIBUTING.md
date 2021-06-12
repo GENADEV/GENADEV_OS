@@ -260,3 +260,42 @@ They have to follow the following structure:
 Or
 
 [Github Discussions](https://github.com/GENADEV/GENADEV_OS/discussions) (For everyone as long as it is on-topic)
+
+
+## Credits / Copyright
+
+Here at GENADEV we greatly appreciate your contributions, however you must understand that a `fix typo` commit cannot be credited in the copyright header
+
+Here's how we do it:
+- First, copy and paste the copyright notice below if you have created a new file
+    ```C
+    /*
+    This file is part of an AArch64 hobbyist OS for the Raspberry Pi 3 B+ called GENADEV_OS
+    Everything is openly developed on github: https://github.com/GENADEV/GENADEV_OS
+    Copyright (C) 2021  GENADEV_OS and it's affiliates
+     This program is free software: you can redistribute it and/or modify
+     it under the terms of the GNU General Public License as published by
+     the Free Software Foundation, either version 3 of the License, or
+     (at your option) any later version.
+     This program is distributed in the hope that it will be useful,
+     but WITHOUT ANY WARRANTY; without even the implied warranty of
+     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+     
+    Authors: foo
+    Contributers: bar
+    */
+    ```
+- If you are the creator of the file, please enter in your name next the `Authors` field where it says `foo`. This name should not be changed by anyone and PRs which change this without proof that the author/creator of the file was the one changing this will be rejected.
+(The maintainers of the GENADEV_OS repo hold the right to revoke the name change at any time, no matter the circumstance)
+
+- If you have made a *significant* contribution place you name next to the `Contributers` field where it says `bar`.
+Multiple contributers should be separated by commas and a newline may be inserted where the list gets too lengthy. (If you have to scroll sideways to see your name, please place it on a newline)
+If a newline has been inserted please indent it with 4 spaces
+
+- What does and doesn't qualify for you to place your name in the `Contributers` field:
+    - Fixing a security bug, adding some new notable feature (emphasis on notable), or a nasty bug (something that has a very negative impact on the kernel/OS such as a corruption of xyz due to faulty code) qualifies you for an entry in the `Contributers` section
+
+    - Fixing a typo, correcting a constant, adding variables, refactoring code, adding minor features (a minor feature would be something like a utility function or a wrapper function)
