@@ -50,7 +50,7 @@ unsigned int mailbox_read(unsigned int channel)
 void mailbox_write(unsigned int channel, unsigned int *data)
 {
 	// wait until that there is enough space in the mailbox
-	while (*MB_STATUS & MB_FULL);
+	while (*MB_STATUS & MB_FULL) { debug(2, "not ready\n"); };
 
 	// combine data (28 bits) and channel (4 bits)
 	*MB_WRITE = (data[4] | channel); //NOTE: This method of writing to the mailbox aims to satifsy compiler warnings, though it is untested and may cause UB. If "data[4]" causes any issues, try higher indexes or revert it back to "(unsigned int)data" which is guaranteed to work

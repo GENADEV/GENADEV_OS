@@ -26,6 +26,9 @@
 #define __section_align  __attribute__((aligned (16)))
 #define __section_align8 __attribute__((aligned (8)))
 
+/* Import a symbol defined in the linkerscript into C (Note the use of [], this is used sothat one can access data without using '&' thanks to array-to-pointer decay */
+#define IMPORT_LD_DEF(name) extern size_t name[];
+
 #define R_MASK_AND_EXTRACT_BITS(val, n, mask) ((val >> n) & mask) //Perform a rightshift (R) by `n' bits and mask the bits
 #define L_MASK_AND_EXTRACT_BITS(val, n, mask) ((val << n) & mask) //Perform a leftshift (L) by `n' bits and mask the bits
 

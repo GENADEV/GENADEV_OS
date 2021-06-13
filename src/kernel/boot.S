@@ -20,6 +20,8 @@
 
 .extern bss_begin
 .extern bss_end
+.include "src/kernel/mm/mmu.S"
+.include "src/kernel/arm-v-8/asm/sys_ctrl.S"
 
 .section .text.boot
 
@@ -29,9 +31,13 @@ _start:
     mrs x0, mpidr_el1   // Multiprocessor Affinity Register
     and x0, x0, #0xFF   // Lower 8 bits indicate the core no.
     cbz x0, drop_to_el2 // Is the Core ID == 0? (Main core)
-    b hang              // Stop the core
+    b hang     // Stop the core
+
 
 drop_to_el2:
+    ldr x0, =[0 << 0]
+    msr sctlr_el1, x0
+
     // If we are already at EL2 (e.g., when running in QEMU),
     // skip this step
     mrs x0, CurrentEL
@@ -52,22 +58,37 @@ drop_to_el1:
     ldr x0, =[0x80000]
     msr sp_el1, x0
 
-    mov x1, #(1 << 31)    // Set execution state to AArch64
-    orr x1, x1, #(1 << 1) // SWIO
-    msr hcr_el2, x1
+    /* Comment me to test jump to el1 */
+    bl bss_zero
+    bl configure_mmu
+    
+    //This works when we stay in EL2, if we just do this in EL2 and continue to jump to EL1 you *will* get a prefetch abort exception
+    orr	x4, x4, #1
+	mrs	x4, sctlr_el1    
+    
+    /* Comment me to test jump to el1 */
+    bl main
+    b hang
 
-    mov x1, #0x3c4        // D=1, A=1, I=1, F=1 M=EL1t
-    msr spsr_el2, x1
+    /* Uncomment me to test jump to el1 */
+    //mov x1, #(1 << 31)    // Set execution state to AArch64
+    //orr x1, x1, #(1 << 1) // SWIO
+    //msr hcr_el2, x1
 
-    mov x1, #(3 << 20)    // Disable floating-point, SVE
-    msr cpacr_el1, x1
+    //mov x1, #0x3c4        // D=1, A=1, I=1, F=1 M=EL1t
+    //msr spsr_el2, x1
 
-    adr x1, el1_entry
-    msr elr_el2, x1
-    eret
+    //mov x1, #(3 << 20)    // Disable floating-point, SVE
+    //msr cpacr_el1, x1
+
+    //adr x1, el1_entry
+    //msr elr_el2, x1
+    //eret
 
 el1_entry:
     bl bss_zero
+    bl configure_mmu
+    
     bl main
     b hang
 
@@ -84,4 +105,5 @@ bss_zero:
     ret
 
 hang:
+    wfe
     b hang

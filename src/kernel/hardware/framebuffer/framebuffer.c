@@ -54,6 +54,7 @@ struct GFX_Struct
 	uint32_t global_background_color;
 } framebuffer;
 
+extern unsigned int *MB_STATUS, *MB_WRITE;
 void framebuffer_init(void)
 {
 	framebuffer.cursor_x_pos = 0;
@@ -70,7 +71,7 @@ void framebuffer_init(void)
 	// ALLOCATE BUFFER
 	// GET PITCH
 
-	uint32_t __section_align *mb_buffer;
+	uint32_t *mb_buffer __section_align;
 
 	mb_buffer[0] = 35 * 4;										// total buffer size
 	mb_buffer[1] = MB_REQUEST;									// buffer request
@@ -117,6 +118,12 @@ void framebuffer_init(void)
 	mb_buffer[34] = 0;											// end tag
 
 	// write the mailbox buffer to channel 8 - property tags
+	// wait until that there is enough space in the mailbox
+	// while (*MB_STATUS & MB_FULL);
+
+	// debug(2, "0x%lx\n", mb_buffer[1]);
+	// combine data (28 bits) and channel (4 bits)
+	// *MB_WRITE = (*mb_buffer | MB_CHANNEL_PROP);
 	mailbox_write(MB_CHANNEL_PROP, mb_buffer);
 
 	// check the number of bytes per line or pitch and pointer to the framebuffer
@@ -132,6 +139,7 @@ void framebuffer_init(void)
 		mb_buffer[28] &= 0x3FFFFFFF;							// convert GPU address to ARM address
 		framebuffer.address = (unsigned char *)((long)mb_buffer[28]);	// get framebuffer address
 	}
+
 }
 
 // color must be in hexadecimal with 8 digits (4 binary bits = 1 hexadecimal digit -> ARGB (32 bits) = 8 hexadecimal degits)

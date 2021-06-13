@@ -34,7 +34,7 @@ void handle_undefined_exception(uint32_t currentEL, uint32_t esr,
 		  "\tESR      : 0x%lx\n"
 		  "\tELR      : 0x%lx\n"
 		  "***********************************************\n",
-		  currentEL, esr, elr);
+		  currentEL >> 2, esr, elr);
 }
 
 void handle_irq(void)

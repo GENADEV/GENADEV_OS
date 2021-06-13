@@ -13,30 +13,18 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
      
-    Author: Tim Thompson <https://github.com/V01D-NULL>
+    Author: Yves Vollmeier <https://github.com/Tix3Dev>
+    Contributer: Tim Thompson <https://github.com/V01D-NULL>
 */
 
-#ifndef VMM_H
-#define VMM_H
-#include <stdint.h>
+#ifndef SMP_H
+#define SMP_H
 
-static inline uint64_t GET_PGD()
+typedef struct 
 {
-    uint64_t res;
-    asm("mrs %0, ttbr0_el1\n" : "=r"(res));
-    return res;
-}
+    long id;
+}smp_core_t;
 
-/* Flushes/invalidates the TLB for EL1 only */
-#define FLUSH_TLB_EL1() asm("tlbi vmalle1\n")
+void smp_test_core(long id);
 
-struct paging_hierarchy
-{
-    uint64_t PGD; //Page Global Directory
-    uint64_t PUD; //Page Upper Directory
-    uint64_t PMD; //Page Middle Directory
-    uint64_t PTE; //Page Table Entry
-};
-
-
-#endif // VMM_H
+#endif // SMP_H

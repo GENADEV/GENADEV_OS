@@ -17,8 +17,5 @@
 */
 
 #include "vmm.h"
-
-void vmm_init()
-{
-
-}
+#include <lib/debug/debug.h>
+#include <kernel/arm-v-8/genadev_os.h>

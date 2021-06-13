@@ -19,10 +19,10 @@
 
 #include "panic.h"
 #include <stdarg.h>
-#include "../../lib/stdio/fmt.h"
-#include "../../lib/debug/debug.h"
+#include <lib/stdio/fmt.h>
+#include <lib/debug/debug.h>
 #include <stdint.h>
-#include "../arm-v-8/cpu.h"
+#include <kernel/arm-v-8/cpu.h>
 
 struct stackframe
 {
@@ -49,6 +49,7 @@ __no_return panic(const char *err, ...)
 
 	debug(DBG_BOTH, "Stack trace complete | Halting computer now\n");
 
+	
 	for (;;)
 		relax_cpu();	
 }

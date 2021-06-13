@@ -13,30 +13,19 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
      
-    Author: Tim Thompson <https://github.com/V01D-NULL>
+    Author: Yves Vollmeier <https://github.com/Tix3Dev>
+    Contributer: Tim Thompson <https://github.com/V01D-NULL>
 */
 
-#ifndef VMM_H
-#define VMM_H
-#include <stdint.h>
+#include <kernel/smp/smp.h>
 
-static inline uint64_t GET_PGD()
+smp_core_t core_id;
+
+void smp_test_core(long id)
 {
-    uint64_t res;
-    asm("mrs %0, ttbr0_el1\n" : "=r"(res));
-    return res;
+    core_id.id = id;
+
+    asm ("mov x22, %0\n" :: "r"(id));
+
+    for(;;);
 }
-
-/* Flushes/invalidates the TLB for EL1 only */
-#define FLUSH_TLB_EL1() asm("tlbi vmalle1\n")
-
-struct paging_hierarchy
-{
-    uint64_t PGD; //Page Global Directory
-    uint64_t PUD; //Page Upper Directory
-    uint64_t PMD; //Page Middle Directory
-    uint64_t PTE; //Page Table Entry
-};
-
-
-#endif // VMM_H
