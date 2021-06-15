@@ -20,15 +20,23 @@
 #define VMM_H
 #include <stdint.h>
 
+/* Flushes/invalidates the TLB for EL1 only */
+#define FLUSH_TLB_EL1() asm("tlbi vmalle1\n")
+
+#define ENTRIES_PER_TABLE       512
+#define PAGESIZE                4096
+
+#define VA_KERNEL_BASE  0xfff0000000000000
+#define VA_KERNEL_TOP   0xffffffffffffffff
+#define VA_USR_BASE     0x0000000000000000
+#define VA_USR_TOP      0x000fffffffffffff
+
 static inline uint64_t GET_PGD()
 {
     uint64_t res;
-    asm("mrs %0, ttbr0_el1\n" : "=r"(res));
+    asm("mrs %0, ttbr0_el1\n" : "=g"(res));
     return res;
 }
-
-/* Flushes/invalidates the TLB for EL1 only */
-#define FLUSH_TLB_EL1() asm("tlbi vmalle1\n")
 
 struct paging_hierarchy
 {
@@ -37,6 +45,5 @@ struct paging_hierarchy
     uint64_t PMD; //Page Middle Directory
     uint64_t PTE; //Page Table Entry
 };
-
 
 #endif // VMM_H

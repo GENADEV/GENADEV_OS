@@ -18,6 +18,14 @@
 */
 
 
+.macro stack_alloc n
+	sub sp, sp, \n
+.endm
+
+.macro stack_free n
+	add sp, sp, \n
+.endm
+
 //optimized and easy to read infinite loop
 .macro hang
 	1:
@@ -70,4 +78,28 @@
     mrs \xreg, \sysreg\()_el3
     b 104f
 104:
+.endm
+
+//For nested function calls we must save the lr somewhere safe, so we wrap a macro around it for readability
+.macro save_lr save_to
+    mov \save_to, x30
+.endm
+
+/* Nested function call `ret` equivilant */
+.macro lr_ret saved_lr
+    br \saved_lr
+.endm
+
+.macro page_align reg
+    add \reg, \reg, #0x1000
+.endm
+
+.macro push value
+    stack_alloc \value
+    str \value, [sp, #16]
+.endm
+
+.macro pop value
+    ldr \value, [sp, #16]
+    stack_free \value
 .endm

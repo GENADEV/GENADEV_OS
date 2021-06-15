@@ -1,0 +1,57 @@
+/*
+    This file is part of an AArch64 hobbyist OS for the Raspberry Pi 3 B+ called GENADEV_OS
+    Everything is openly developed on github: https://github.com/GENADEV/GENADEV_OS
+    Copyright (C) 2021  GENADEV_OS and it's affiliates
+     This program is free software: you can redistribute it and/or modify
+     it under the terms of the GNU General Public License as published by
+     the Free Software Foundation, either version 3 of the License, or
+     (at your option) any later version.
+     This program is distributed in the hope that it will be useful,
+     but WITHOUT ANY WARRANTY; without even the implied warranty of
+     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+     
+    Author: Michael Buch <https://github.com/Michael137>
+    Contributor: Tim Thompson <https://github.com/V01D-NULL>
+*/
+.extern el1_entry
+
+drop_to_el2:
+    ldr x0, =[0 << 0]
+    msr sctlr_el1, x0
+
+    // If we are already at EL2 (e.g., when running in QEMU),
+    // skip this step
+    mrs x0, CurrentEL
+    cmp x0, #(2 << 2)
+    b.eq drop_to_el1
+
+    mov x0, #0x5b1        // RW=1, HCE=1, SMD=1, RES=1, NS=1
+    msr scr_el3, x0
+
+    mov x0, #0x3c9        // D=1, A=1, I=1, F=1 M=EL2h
+    msr spsr_el3, x0
+
+    adr x0, drop_to_el1
+    msr elr_el3, x0
+    eret
+
+drop_to_el1:
+    ldr x0, =[0x80000]
+    msr sp_el1, x0
+
+    mov x1, #(1 << 31)    // Set execution state to AArch64
+    orr x1, x1, #(1 << 1) // SWIO
+    msr hcr_el2, x1
+
+    mov x1, #0x3c4        // D=1, A=1, I=1, F=1 M=EL1t
+    msr spsr_el2, x1
+
+    mov x1, #(3 << 20)    // Disable floating-point, SVE
+    msr cpacr_el1, x1
+
+    adr x1, el1_entry
+    msr elr_el2, x1
+    eret

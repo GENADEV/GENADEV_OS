@@ -14,12 +14,14 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
      
     Author: Yves Vollmeier <https://github.com/Tix3Dev>
+    Contributer: Tim Thompson <https://github.com/V01D-NULL>
 */
 
 ENTRY(_start)
 
 SECTIONS
 {
+    /* -- Kernel image -- */
     kernel_start = .;
 	.text.boot	: { *(.text.boot) }
 	.text.interrupts : { *(.text.interrupts) }
@@ -31,9 +33,10 @@ SECTIONS
 	bss_begin	= .;
 	.bss		: { *(.bss*) } 
 	bss_end		= .;
-
     kernel_end = .;
+    /* -- Kernel image -- */
 
+    /* Translation tables are stored outside of the kernel image */
     . = ALIGN(0x1000);
     .page_tables : { *(.page_tables) }
 }

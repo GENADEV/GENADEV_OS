@@ -43,15 +43,9 @@ void main()
 	mini_uart_init();
 	uart0_init();
 
-	debug(DBG_BOTH, "0x%x\n", kernel_start);
-	debug(DBG_BOTH, "0x%x\n", kernel_end);
-
-	int r;
-	asm(
-		"orr	x4, x4, #1\n"
-		"mrs	x4, sctlr_el2\n"
-	);
-
+	debug(DBG_BOTH, "Kernel start -> 0x%x\n", kernel_start);
+	debug(DBG_BOTH, "Kernel   end -> 0x%x\n", kernel_end);
+	
 	debug(DBG_BOTH, "GENADEV_OS\n");
 
 	// get current exception level
@@ -64,16 +58,17 @@ void main()
 	debug(DBG_BOTH, "Current EL: %d\n", el);
 
 	irq_init();
-	timer_init(1000);
+	// timer_init(1000);
 	irq_enable();
 
 	cpu_info();
 
-	// framebuffer_init();
-	// framebuffer_set_background_color(0xFF27DFF8);
-	// printk(0xFF27DFF8, 0xFFF9AC37, "Hello World! The coolest OS out there is obviously %s.", "GENADEV_OS");
+	framebuffer_init();
+	framebuffer_set_background_color(0xFF27DFF8);
+	printk(0xFF27DFF8, 0xFFF9AC37, "Hello World! The coolest OS out there is obviously %s.", "GENADEV_OS");
 
-	kassert(1 > 2);
+	debug(DBG_BOTH, "PGD: 0x%x\n", GET_PGD());
 
+	debug(DBG_BOTH, "Kernel end\n");
 	for (;;) {}
 }

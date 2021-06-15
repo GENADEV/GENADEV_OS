@@ -57,7 +57,7 @@ run: run_uart0
 
 run_uart0: $(TARGET_FINAL)
 	@printf "Keep in mind: Qemu is using the uart device\n";
-	$(QEMU_AARCH64) -M raspi3 -kernel $(TARGET_FINAL) -serial stdio -d int -D qemu.log -vnc :1
+	$(QEMU_AARCH64) -M raspi3 -kernel $(TARGET_FINAL) -serial stdio -d int -vnc :1
 
 run_uart1: $(TARGET_FINAL)
 	@printf "Keep in mind: Qemu is using the mini-uart device\n";
