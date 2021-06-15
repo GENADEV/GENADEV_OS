@@ -98,4 +98,6 @@ configure_mmu:
     mov x3, xzr
     enable_mmu x3
 
+    dsb sy
+
     ret
