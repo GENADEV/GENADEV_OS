@@ -12,7 +12,7 @@
     GNU General Public License for more details.
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
-     
+
     Author: Yves Vollmeier <https://github.com/Tix3Dev>
     Contributer: Tim Thompson <https://github.com/V01D-NULL>
 */
@@ -23,9 +23,9 @@ smp_core_t core_id;
 
 void smp_test_core(long id)
 {
-    core_id.id = id;
+	core_id.id = id;
 
-    asm ("mov x22, %0\n" :: "r"(id));
+	asm ("mov x22, %0\n" :: "r"(id));
 
-    for(;;);
+	for (;;);
 }

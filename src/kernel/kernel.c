@@ -45,7 +45,7 @@ void main()
 
 	debug(DBG_BOTH, "Kernel start -> 0x%x\n", kernel_start);
 	debug(DBG_BOTH, "Kernel   end -> 0x%x\n", kernel_end);
-	
+
 	debug(DBG_BOTH, "GENADEV_OS\n");
 
 	// get current exception level
@@ -70,5 +70,6 @@ void main()
 	debug(DBG_BOTH, "PGD: 0x%x\n", GET_PGD());
 
 	debug(DBG_BOTH, "Kernel end\n");
+
 	for (;;) {}
 }
