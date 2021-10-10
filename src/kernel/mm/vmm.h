@@ -34,16 +34,15 @@
 static inline uint64_t GET_PGD()
 {
     uint64_t res;
-    asm("mrs %0, ttbr0_el1\n" : "=g"(res));
+    asm("mrs %0, ttbr1_el1\n" : "=g"(res));
     return res;
 }
 
-struct paging_hierarchy
-{
-    uint64_t PGD; //Page Global Directory
-    uint64_t PUD; //Page Upper Directory
-    uint64_t PMD; //Page Middle Directory
-    uint64_t PTE; //Page Table Entry
-};
+typedef struct {
+    uint64_t *TTBR0; //User
+    uint64_t *TTBR1; //Kernel
+} virtual_memory_root_t;
+
+void virt_mem_init();
 
 #endif // VMM_H

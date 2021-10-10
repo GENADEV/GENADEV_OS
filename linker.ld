@@ -21,7 +21,8 @@ ENTRY(_start)
 
 SECTIONS
 {
-    /* -- Kernel image -- */
+    /* -- Kernel sections -- */
+    . = 0xffff000000000000;
     kernel_start = .;
 	.text.boot	: { *(.text.boot) }
 	.text.interrupts : { *(.text.interrupts) }
@@ -34,9 +35,8 @@ SECTIONS
 	.bss		: { *(.bss*) } 
 	bss_end		= .;
     kernel_end = .;
-    /* -- Kernel image -- */
+    /* -- Kernel sections -- */
 
-    /* Translation tables are stored outside of the kernel image */
     . = ALIGN(0x1000);
     .page_tables : { *(.page_tables) }
 }

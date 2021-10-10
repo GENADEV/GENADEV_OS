@@ -67,8 +67,8 @@ void main()
 	framebuffer_set_background_color(0xFF27DFF8);
 	printk(0xFF27DFF8, 0xFFF9AC37, "Hello World! The coolest OS out there is obviously %s.", "GENADEV_OS");
 
-	debug(DBG_BOTH, "PGD: 0x%x\n", GET_PGD());
-
+	debug(DBG_BOTH, "PGD: 0x%llx\n", GET_PGD());
+	virt_mem_init();
 	debug(DBG_BOTH, "Kernel end\n");
 
 	for (;;) {}
