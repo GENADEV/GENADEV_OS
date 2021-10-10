@@ -27,6 +27,7 @@
 #include <kernel/int/irq.h>
 #include <kernel/panic/panic.h>
 #include <kernel/mm/vmm.h>
+#include <kernel/mm/memdef.h>
 #include <kernel/smp/spinlock.h>
 #include <kernel/smp/smp.h>
 #include <lib/assert.h>
@@ -43,8 +44,8 @@ void main()
 	mini_uart_init();
 	uart0_init();
 
-	debug(DBG_BOTH, "Kernel start -> 0x%x\n", kernel_start);
-	debug(DBG_BOTH, "Kernel   end -> 0x%x\n", kernel_end);
+	debug(DBG_BOTH, "Kernel start -> 0x%llx\n", __to_va(kernel_start));
+	debug(DBG_BOTH, "Kernel   end -> 0x%llx\n", __to_va(kernel_end));
 
 	debug(DBG_BOTH, "GENADEV_OS\n");
 
@@ -67,7 +68,7 @@ void main()
 	framebuffer_set_background_color(0xFF27DFF8);
 	printk(0xFF27DFF8, 0xFFF9AC37, "Hello World! The coolest OS out there is obviously %s.", "GENADEV_OS");
 
-	debug(DBG_BOTH, "PGD: 0x%llx\n", GET_PGD());
+	debug(DBG_BOTH, "TTBR1: 0x%llx\n", TTBR_READ().TTBR1);
 	virt_mem_init();
 	debug(DBG_BOTH, "Kernel end\n");
 

@@ -19,6 +19,7 @@
 #ifndef VMM_H
 #define VMM_H
 #include <stdint.h>
+#include <stddef.h>
 
 /* Flushes/invalidates the TLB for EL1 only */
 #define FLUSH_TLB_EL1() asm("tlbi vmalle1\n")
@@ -26,22 +27,18 @@
 #define ENTRIES_PER_TABLE       512
 #define PAGESIZE                4096
 
-#define VA_KERNEL_BASE  0xfff0000000000000
-#define VA_KERNEL_TOP   0xffffffffffffffff
-#define VA_USR_BASE     0x0000000000000000
-#define VA_USR_TOP      0x000fffffffffffff
-
-static inline uint64_t GET_PGD()
-{
-    uint64_t res;
-    asm("mrs %0, ttbr1_el1\n" : "=g"(res));
-    return res;
-}
-
 typedef struct {
     uint64_t *TTBR0; //User
     uint64_t *TTBR1; //Kernel
 } virtual_memory_root_t;
+
+static inline virtual_memory_root_t TTBR_READ()
+{
+    virtual_memory_root_t root;
+    asm("mrs %0, ttbr0_el1\n" : "=g"((uint64_t)root.TTBR0));
+    asm("mrs %0, ttbr1_el1\n" : "=g"((uint64_t)root.TTBR1));
+    return root;
+}
 
 void virt_mem_init();
 

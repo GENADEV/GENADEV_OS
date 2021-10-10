@@ -22,7 +22,15 @@ ENTRY(_start)
 SECTIONS
 {
     /* -- Kernel sections -- */
-    . = 0xffff000000000000;
+    
+    /* NOTE: Until we set the gpio/mmio_base.h defintion to VA_KERNEL_BASE + DEVICE_MEMORY_BASE
+       we will get data abort exceptions.
+       For this reason you should remember to update mmio_base.h once paging is working!
+       If you don't, you'll get errors when trying to access MMIO devices (such as a debug call which uses the UART)
+    */
+
+    /* . = 0xffff000000080000;  */
+    . = 0x80000;
     kernel_start = .;
 	.text.boot	: { *(.text.boot) }
 	.text.interrupts : { *(.text.interrupts) }

@@ -50,9 +50,9 @@ MMU page structure:
 configure_mmu:
     /* There will not be a stage2 mmu setup since we don't support virtualization */
     
-    //Load ttbr0 aka L1 table base address
-    adr x0, ttbr0_el1_table_base
-    msr ttbr0_el1, x0
+    //Load ttbr1 aka L1 table base address
+    ldr x0, =ttbr1_el1_table_base
+    msr ttbr1_el1, x0
     
     //Setup memory attributes
     //
@@ -87,7 +87,7 @@ configure_mmu:
     isb
 
     /* Fill table with invalid entries */
-    adr x0, ttbr0_el1_table_base
+    adr x0, ttbr1_el1_table_base
     mov x1, 512  //One entry for one table, for more tables multiply this value by the amount of tables (we will most likely be using two tables so this value would be 512x2 = 1024 but we don't have multi level tables so the value is 512 for now)
 
     1:

@@ -58,6 +58,6 @@ bss_zero:
 
 /* L1 lookup table (We will use multilevel translation tables later on) */
 .section .page_tables
-.globl ttbr0_el1_table_base
-ttbr0_el1_table_base:
+.globl ttbr1_el1_table_base
+ttbr1_el1_table_base:
     .space 4096, 0x0
