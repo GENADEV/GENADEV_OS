@@ -153,4 +153,4 @@ irq_init:
     ret
 
 .section .data
-    loaded_irq_msg:  .asciz "Installed IRQ's\n"
+    loaded_irq_msg:  .asciz "Configured kernel IRQ's\n"
