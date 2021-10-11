@@ -15,8 +15,8 @@
     - git
     - qemu-system-arm
     - make
-    - libncurses5
     - astyle
+    - gdb-multiarch
   - Arch based linux distributions:
     - git
     - qemu

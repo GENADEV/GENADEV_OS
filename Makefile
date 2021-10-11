@@ -31,7 +31,8 @@ QEMU_AARCH64 = qemu-system-aarch64
 
 INCLUDEDIR=src
 
-CC_OPT			= -mno-outline-atomics -fno-omit-frame-pointer -mcpu=cortex-a53 -nostdlib -ffreestanding -std=gnu99 -mgeneral-regs-only -O2 -c -I$(INCLUDEDIR)
+CC_OPT			= -mno-outline-atomics -fno-omit-frame-pointer -mcpu=cortex-a53 -nostdlib -ffreestanding -std=gnu99 -mgeneral-regs-only -O2 -c -I$(INCLUDEDIR) -g
+AS_OPT			= -mcpu=cortex-a53 -g --gdwarf-2
 TARGET_ELF		= kernel8.elf
 TARGET_FINAL	= kernel8.img
 
@@ -63,6 +64,9 @@ run_uart1: $(TARGET_FINAL)
 	@printf "Keep in mind: Qemu is using the mini-uart device\n";
 	$(QEMU_AARCH64) -M raspi3 -kernel $(TARGET_FINAL) -serial null -serial stdio -d int -D qemu.log -vnc :1
 
+debug:
+	$(QEMU_AARCH64) -M raspi3 -kernel $(TARGET_FINAL) -serial stdio -d int -vnc :1 -S -s
+
 $(TARGET_FINAL): $(OBJ)
 	$(LD) -T linker.ld $^ -o $(BUILD)/$(TARGET_ELF)
 	$(OBJCPY) $(BUILD)/$(TARGET_ELF) -O binary $@
@@ -75,7 +79,7 @@ format:
 
 %.o: %.S
 	@printf " AS\t$<\n";
-	$(AS) -c $< -o $@
+	$(AS) $(AS_OPT) -c $< -o $@
 
 %.o: %.c
 	@printf " CC\t$<\n";

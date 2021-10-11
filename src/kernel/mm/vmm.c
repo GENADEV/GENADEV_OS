@@ -68,7 +68,6 @@ uint64_t *get_next_entry(uint64_t *pml, int level, int flags)
 
     // Causes data abort- investigate
     // return (uint64_t*)(pml[level] & ~(511));
-    
 
     return 0;
 }
