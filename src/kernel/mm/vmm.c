@@ -30,18 +30,20 @@
 
 virtual_memory_root_t root;
 
+void validate_alignment(uint64_t virtual, uint64_t physical);
 void vmap(uint64_t virt, uint64_t phys, int flags, bool kernel);
 
 void virt_mem_init()
 {
     root = TTBR_READ();
 
-    /* This is just used to test vmap() */
-    vmap(MMIO_BASE, MMIO_BASE, 0x3, true);
+    /* vmap() tests */
+    vmap(VA_KERNEL_BASE + MMIO_BASE, MMIO_BASE, 0x3, true); //Normal mapping
+    vmap(0xfff2000000000000, 0x0, 0x3, true); //Malformed virtual address
 }
 
 //https://github.com/s-matyukevich/raspberry-pi-os/blob/master/docs/lesson06/rpi-os.md#page-descriptor-format
-uint64_t *get_next_entry(uint64_t *pml, int level, int flags)
+pte_t *get_next_entry(uint64_t *pml, int level, int flags)
 {
     // TODO:
     // if page.NOT_PRESENT:
@@ -50,7 +52,7 @@ uint64_t *get_next_entry(uint64_t *pml, int level, int flags)
     if (pml[level] & 1)
     {
         debug(DBG_BOTH, "Present bit set\n");
-    } 
+    }
     else
     {
         debug(DBG_BOTH, "Present bit NOT set\n");
@@ -61,33 +63,47 @@ uint64_t *get_next_entry(uint64_t *pml, int level, int flags)
     {
         debug(DBG_BOTH, "Block/Table bit is set\n");
     }
-    else 
+    else
     {
         debug(DBG_BOTH, "Block/Table bit is NOT set\n");
     }
 
-    // Causes data abort- investigate
-    // return (uint64_t*)(pml[level] & ~(511));
-
-    return 0;
+    return pte_flags_to_raw_pte(pml[level]);
 }
 
 void vmap(uint64_t virt, uint64_t phys, int flags, bool kernel)
 {
     /* Ensure addresses are page aligned */
-    kassert(virt % PAGESIZE == 0);
-    kassert(phys % PAGESIZE == 0);
-    
-    //bits 64:48 are either all 1 or all 0. All 1 = ttbr1, all 0 = ttbr0
-    bool is_ttbr1  = (virt >> 48) & 0xFFFF; // 0xFFFF ~ 0b111111111111 (16 bits)
-    size_t indexL1 = (virt >> 39) & 0x1FF;  // 0x1FF  ~ 0b111111111 (9 bits, the exact size that reveals the table index)
-    size_t indexL2 = (virt >> 30) & 0x1FF;
+    validate_alignment(virt, phys);
 
-    uint64_t *L1 = NULL; // PGD
-    uint64_t *L2 = NULL; // PUD
+    //bits 64:48 are either all 1 or all 0. All 1 = ttbr1, all 0 = ttbr0
+    bool is_ttbr1 = (virt >> 48) & 0xFFFF;  // 0xFFFF ~ 0b111111111111 (16 bits)
+
+    uint64_t upper16 = (virt >> 48) & 0xFFFF;
+    if (upper16 != 0xFFFF && upper16 != 0x0000)
+    {
+        panic("Malformed virtual address (upper 16 bits must be 0xFFFF or 0x0000, got: 0x%X)", (virt >> 48) & 0xFFFF);
+    }
+    
+    size_t indexL0 = table_index(virt, 39, 0, four_kib);
+    size_t indexL1 = table_index(virt, 30, 1, four_kib);
+
+    pte_t *L0 = NULL; // PGD
+    pte_t *L1 = NULL; // PUD
 
     //Rough draft of a table walk, subject to change in the future
-    L1 = get_next_entry(kernel ? root.TTBR1 : root.TTBR0, indexL1, flags);
-    L2 = get_next_entry(L1, indexL2, flags);
-    L2[indexL2] = (phys | flags);
+    L0 = get_next_entry(kernel ? root.TTBR1 : root.TTBR0, indexL0, flags);
+    L1 = get_next_entry(L1, indexL1, flags);
+    L1[indexL1] = (phys | flags);
+}
+
+/* TODO: Do we really need to check if the physical address is aligned? 
+   The pmm returns page aligned blocks of memory after all */
+void validate_alignment(uint64_t virtual, uint64_t physical)
+{
+    if (!is_page_aligned(virtual))
+        panic("Virtual address is not page aligned! [ %llX ]\n", virtual);
+    
+    else if (!is_page_aligned(physical))
+        panic("Physical address is not page aligned! [ %llX ]\n", physical);
 }

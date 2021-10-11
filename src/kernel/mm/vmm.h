@@ -20,6 +20,7 @@
 #define VMM_H
 #include <stdint.h>
 #include <stddef.h>
+#include <stdbool.h>
 
 /* Flushes/invalidates the TLB for EL1 only */
 #define FLUSH_TLB_EL1() asm("tlbi vmalle1\n")
@@ -27,10 +28,22 @@
 #define ENTRIES_PER_TABLE       512
 #define PAGESIZE                4096
 
+typedef uint64_t pte_t;
+
 typedef struct {
     uint64_t *TTBR0; //User
     uint64_t *TTBR1; //Kernel
 } virtual_memory_root_t;
+
+enum {
+    PTE_PRESENT = (1 << 0),
+    PTE_PAGE    = (1 << 1),
+    PTE_RW      = (0 << 7)
+};
+
+typedef enum {
+    four_kib = 9, /* 9 bits for 4KiB wide pages */
+} page_granularity_t;
 
 static inline virtual_memory_root_t TTBR_READ()
 {
@@ -38,6 +51,22 @@ static inline virtual_memory_root_t TTBR_READ()
     asm("mrs %0, ttbr0_el1\n" : "=g"((uint64_t)root.TTBR0));
     asm("mrs %0, ttbr1_el1\n" : "=g"((uint64_t)root.TTBR1));
     return root;
+}
+
+static inline uint64_t table_index(uint64_t virt, int bit_offset, int level, page_granularity_t gran)
+{
+    return (virt >> (bit_offset - gran * level)) & 0x1FF; // 0x1FF  ~ 0b111111111 (9 bits, the exact size that reveals the table index)
+}
+
+/* Return a PTE without flags (example: 0x1003 -> 0x1000) */
+static inline pte_t *pte_flags_to_raw_pte(pte_t pte)
+{
+    return (pte_t*) (pte & ~(0xFFF));
+}
+
+static inline bool is_page_aligned(uint64_t addr)
+{
+    return (addr % PAGESIZE) == 0;
 }
 
 void virt_mem_init();
