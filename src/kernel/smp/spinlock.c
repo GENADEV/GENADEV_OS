@@ -12,7 +12,7 @@
     GNU General Public License for more details.
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
-     
+
     Author: Tim Thompson <https://github.com/V01D-NULL>
 */
 
@@ -20,10 +20,10 @@
 
 void aquire_lock(bool *lock)
 {
-    while(__atomic_test_and_set(lock, __ATOMIC_ACQUIRE));
+	while (__atomic_test_and_set(lock, __ATOMIC_ACQUIRE));
 }
 
 void release_lock(bool *lock)
 {
-    __atomic_clear(lock, __ATOMIC_RELEASE);
+	__atomic_clear(lock, __ATOMIC_RELEASE);
 }

@@ -27,11 +27,14 @@
 #include <kernel/int/irq.h>
 #include <kernel/panic/panic.h>
 #include <kernel/mm/vmm.h>
+#include <kernel/smp/smp.h>
 #include <kernel/smp/spinlock.h>
 #include <lib/assert.h>
 #include <lib/debug/debug.h>
 #include <lib/stdio/stdio.h>
 #include <lib/string/string.h>
+
+extern smp_core_t core_id;
 
 void main()
 {
@@ -56,9 +59,12 @@ void main()
 
 	cpu_info();
 
-	framebuffer_init();
-	framebuffer_set_background_color(0xFF27DFF8);
-	printk(0xFF27DFF8, 0xFFF9AC37, "Hello World! The coolest OS out there is obviously %s.", "GENADEV_OS");
+	// framebuffer_init();
+	// framebuffer_set_background_color(0xFF27DFF8);
+	// printk(0xFF27DFF8, 0xFFF9AC37, "Hello World! The coolest OS out there is obviously %s.", "GENADEV_OS");
+
+	for (int i = 3; i != 0; i--)
+		debug(DBG_BOTH, "Found core %d\n", core_id.id);
 
 	kassert(1 > 2);
 

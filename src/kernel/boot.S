@@ -20,6 +20,8 @@
 
 .extern bss_begin
 .extern bss_end
+.extern smp_test_core
+.include "src/kernel/arm-v-8/asm/macros.S"
 
 .section .text.boot
 
@@ -29,7 +31,7 @@ _start:
     mrs x0, mpidr_el1   // Multiprocessor Affinity Register
     and x0, x0, #0xFF   // Lower 8 bits indicate the core no.
     cbz x0, drop_to_el2 // Is the Core ID == 0? (Main core)
-    b hang              // Stop the core
+    hang				// Stop the core
 
 drop_to_el2:
     // If we are already at EL2 (e.g., when running in QEMU),
@@ -84,4 +86,4 @@ bss_zero:
     ret
 
 hang:
-    b hang
+	b hang
