@@ -25,33 +25,33 @@ unsigned int *MB_WRITE	= (unsigned int *)(MB_BASE + 0x20);
 
 unsigned int mailbox_read(unsigned int channel)
 {
-	unsigned int *read_data;
-	unsigned int read_channel;
-	unsigned int clean_data;
+    unsigned int *read_data;
+    unsigned int read_channel;
+    unsigned int clean_data;
 
-	for (;;)
-	{
-		// wait until that there is something written in a mailbox
-		while (*MB_STATUS & MB_EMPTY);
+    for (;;)
+    {
+        // wait until that there is something written in a mailbox
+        while (*MB_STATUS & MB_EMPTY);
 
-		// assign read content to read_data
-		read_data = (unsigned int*)&MB_READ;
-		// get the lower 4 bits that contain the channel
-		read_channel = *read_data & 0b1111;
-		// shift bits to the right to get the upper 28 bits of the returned data
-		clean_data = *read_data >>= 4;
+        // assign read content to read_data
+        read_data = (unsigned int*)&MB_READ;
+        // get the lower 4 bits that contain the channel
+        read_channel = *read_data & 0b1111;
+        // shift bits to the right to get the upper 28 bits of the returned data
+        clean_data = *read_data >>= 4;
 
-		// check if the read channel equals the desired channel
-		if (read_channel == channel)
-			return clean_data;
-	}
+        // check if the read channel equals the desired channel
+        if (read_channel == channel)
+            return clean_data;
+    }
 }
 
 void mailbox_write(unsigned int channel, unsigned int *data)
 {
-	// wait until that there is enough space in the mailbox
-	while (*MB_STATUS & MB_FULL);
+    // wait until that there is enough space in the mailbox
+    while (*MB_STATUS & MB_FULL);
 
-	// combine data (28 bits) and channel (4 bits)
-	*MB_WRITE = (data[4] | channel); //NOTE: This method of writing to the mailbox aims to satifsy compiler warnings, though it is untested and may cause UB. If "data[4]" causes any issues, try higher indexes or revert it back to "(unsigned int)data" which is guaranteed to work
+    // combine data (28 bits) and channel (4 bits)
+    *MB_WRITE = (data[4] | channel); //NOTE: This method of writing to the mailbox aims to satifsy compiler warnings, though it is untested and may cause UB. If "data[4]" causes any issues, try higher indexes or revert it back to "(unsigned int)data" which is guaranteed to work
 }

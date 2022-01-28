@@ -26,8 +26,8 @@
 
 struct stackframe
 {
-	struct stackframe* fp;
-	uint32_t lr;
+    struct stackframe* fp;
+    uint32_t lr;
 };
 
 void walk_frames(unsigned int MaxFrames);
@@ -35,56 +35,56 @@ void walk_frames(unsigned int MaxFrames);
 char panic_buff[512];
 __no_return panic(const char *err, ...)
 {
-	va_list ap;
-	va_start(ap, err);
-	vsnprintf((char*)&panic_buff, -1, err, ap);
+    va_list ap;
+    va_start(ap, err);
+    vsnprintf((char*)&panic_buff, -1, err, ap);
 
-	debug(DBG_BOTH,
-		  "\n---= KERNEL PANIC =---\n"
-		  "Fault: %s\n\n",
-		  (char*)panic_buff
-		 );
+    debug(DBG_BOTH,
+          "\n---= KERNEL PANIC =---\n"
+          "Fault: %s\n\n",
+          (char*)panic_buff
+         );
 
-	walk_frames(10);
+    walk_frames(10);
 
-	debug(DBG_BOTH, "Stack trace complete | Halting computer now\n");
+    debug(DBG_BOTH, "Stack trace complete | Halting computer now\n");
 
-	for (;;)
-		relax_cpu();
+    for (;;)
+        relax_cpu();
 }
 
 int assertion_failure(const char *err, ...)
 {
-	va_list ap;
-	va_start(ap, err);
-	vsnprintf((char*)&panic_buff, -1, err, ap);
+    va_list ap;
+    va_start(ap, err);
+    vsnprintf((char*)&panic_buff, -1, err, ap);
 
-	debug(DBG_BOTH,
-		  "\n---= Assertion failure =---\n"
-		  "Fault: %s\n\n",
-		  (char*)panic_buff
-		 );
+    debug(DBG_BOTH,
+          "\n---= Assertion failure =---\n"
+          "Fault: %s\n\n",
+          (char*)panic_buff
+         );
 
-	walk_frames(10);
+    walk_frames(10);
 
-	debug(DBG_BOTH, "Stack trace complete | Halting computer now\n");
+    debug(DBG_BOTH, "Stack trace complete | Halting computer now\n");
 
-	for (;;)
-		relax_cpu();
+    for (;;)
+        relax_cpu();
 }
 
 /* Walk a linked list of (lr, fp) which comprise the linked list of frame pointers. For more see this awesome stackoverflow answer which I came across: https://stackoverflow.com/questions/15752188/arm-link-register-and-frame-pointer#15752671 */
 void walk_frames(unsigned int MaxFrames)
 {
-	struct stackframe *stk;
-	asm ("mov %0, x29\n" : "=g"(stk));
+    struct stackframe *stk;
+    asm ("mov %0, x29\n" : "=g"(stk));
 
-	debug(DBG_BOTH, "Stack trace: \n");
+    debug(DBG_BOTH, "Stack trace: \n");
 
-	for (uint32_t frame = 0; stk && frame < MaxFrames; ++frame)
-	{
-		// Unwind to previous stack frame
-		debug(DBG_BOTH, " (%d) _unknown_: 0x%x     \n", frame, stk->lr);
-		stk = stk->fp;
-	}
+    for (uint32_t frame = 0; stk && frame < MaxFrames; ++frame)
+    {
+        // Unwind to previous stack frame
+        debug(DBG_BOTH, " (%d) _unknown_: 0x%x     \n", frame, stk->lr);
+        stk = stk->fp;
+    }
 }

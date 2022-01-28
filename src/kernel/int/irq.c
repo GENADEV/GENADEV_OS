@@ -25,39 +25,39 @@
 #include "../hardware/timer/timer.h"
 
 void handle_undefined_exception(uint32_t currentEL, uint32_t esr,
-								uint32_t elr)
+                                uint32_t elr)
 {
-	debug(DBG_BOTH,
-		  "***********************************************\n"
-		  "Received exception for which no handler exists:\n"
-		  "\tCurrentEL: 0x%lx\n"
-		  "\tESR      : 0x%lx\n"
-		  "\tELR      : 0x%lx\n"
-		  "***********************************************\n",
-		  currentEL, esr, elr);
+    debug(DBG_BOTH,
+          "***********************************************\n"
+          "Received exception for which no handler exists:\n"
+          "\tCurrentEL: 0x%lx\n"
+          "\tESR      : 0x%lx\n"
+          "\tELR      : 0x%lx\n"
+          "***********************************************\n",
+          currentEL, esr, elr);
 }
 
 void handle_irq(void)
 {
-	switch (*CORE0_IRQ_SOURCE)
-	{
-		case CORE_INT_SOURCE_CNTVIRQ:
-			handle_timer_irq();
-			break;
+    switch (*CORE0_IRQ_SOURCE)
+    {
+        case CORE_INT_SOURCE_CNTVIRQ:
+            handle_timer_irq();
+            break;
 
-		default:
-			debug(DBG_BOTH,
-				  "[WARNING] Unknown IRQ received:\n"
-				  "\tIRQ_PENDING_1: %x\n"
-				  "\tIRQ_PENDING_2: %x\n"
-				  "\tIRQ_BASIC_PENDING: %x\n"
-				  "\tIRQ_CORE0_INTERRUPT_SOURCE: %x\n"
-				  "\tIRQ_CORE1_INTERRUPT_SOURCE: %x\n"
-				  "\tIRQ_CORE2_INTERRUPT_SOURCE: %x\n"
-				  "\tIRQ_CORE3_INTERRUPT_SOURCE: %x\n",
-				  *IRQ_PENDING_1, *IRQ_PENDING_2, *IRQ_BASIC_PENDING,
-				  *CORE0_IRQ_SOURCE, *CORE1_IRQ_SOURCE, *CORE2_IRQ_SOURCE,
-				  *CORE3_IRQ_SOURCE);
-			break;
-	}
+        default:
+            debug(DBG_BOTH,
+                  "[WARNING] Unknown IRQ received:\n"
+                  "\tIRQ_PENDING_1: %x\n"
+                  "\tIRQ_PENDING_2: %x\n"
+                  "\tIRQ_BASIC_PENDING: %x\n"
+                  "\tIRQ_CORE0_INTERRUPT_SOURCE: %x\n"
+                  "\tIRQ_CORE1_INTERRUPT_SOURCE: %x\n"
+                  "\tIRQ_CORE2_INTERRUPT_SOURCE: %x\n"
+                  "\tIRQ_CORE3_INTERRUPT_SOURCE: %x\n",
+                  *IRQ_PENDING_1, *IRQ_PENDING_2, *IRQ_BASIC_PENDING,
+                  *CORE0_IRQ_SOURCE, *CORE1_IRQ_SOURCE, *CORE2_IRQ_SOURCE,
+                  *CORE3_IRQ_SOURCE);
+            break;
+    }
 }

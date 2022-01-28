@@ -28,19 +28,19 @@
 const char debug_buff[512];
 int debug(int uart_device, char *fmt, ...)
 {
-	// Only use a device ranging from 0-1 or both
-	if (uart_device > 2 || uart_device < 0)
-		return 1;
+    // Only use a device ranging from 0-1 or both
+    if (uart_device > 2 || uart_device < 0)
+        return 1;
 
-	va_list ap;
-	va_start(ap, fmt);
-	vsnprintf((char*)&debug_buff, -1, fmt, ap);
+    va_list ap;
+    va_start(ap, fmt);
+    vsnprintf((char*)&debug_buff, -1, fmt, ap);
 
-	if (uart_device == 2)
-		ua_puts1((char*)debug_buff), ua_puts0((char*)debug_buff);
-	else
-		(uart_device == 1) ? ua_puts1((char*)debug_buff) : ua_puts0((char*)debug_buff);
+    if (uart_device == 2)
+        ua_puts1((char*)debug_buff), ua_puts0((char*)debug_buff);
+    else
+        (uart_device == 1) ? ua_puts1((char*)debug_buff) : ua_puts0((char*)debug_buff);
 
-	va_end(ap);
-	return 0;
+    va_end(ap);
+    return 0;
 }

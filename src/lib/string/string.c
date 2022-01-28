@@ -21,12 +21,12 @@
 
 int strlen(const char *str)
 {
-	int len = 0;
+    int len = 0;
 
-	while (str[len] != '\0')
-		len++;
+    while (str[len] != '\0')
+        len++;
 
-	return len;
+    return len;
 }
 
 /*
@@ -34,16 +34,16 @@ int strlen(const char *str)
 */
 void *memset(void *src, uint32_t val, size_t n)
 {
-	uint8_t *src_ptr = (uint8_t*)src;
+    uint8_t *src_ptr = (uint8_t*)src;
 
-	do
-	{
-		*src_ptr++ = val;
-		n--;
-	}
-	while (n != 0x0);
+    do
+    {
+        *src_ptr++ = val;
+        n--;
+    }
+    while (n != 0x0);
 
-	return (void *)src;
+    return (void *)src;
 }
 
 /*
@@ -51,18 +51,18 @@ void *memset(void *src, uint32_t val, size_t n)
 */
 void *memcpy(void *src, void *dst, int n)
 {
-	//Cast src and dst to uint8_t* to be able to perform arithemtic operations
-	uint8_t *src_ptr = (uint8_t*)src;
-	uint8_t *dst_ptr = (uint8_t*)dst;
+    //Cast src and dst to uint8_t* to be able to perform arithemtic operations
+    uint8_t *src_ptr = (uint8_t*)src;
+    uint8_t *dst_ptr = (uint8_t*)dst;
 
-	do
-	{
-		*dst_ptr++ = *src_ptr++;
-		n--;
-	}
-	while (n != 0x0);
+    do
+    {
+        *dst_ptr++ = *src_ptr++;
+        n--;
+    }
+    while (n != 0x0);
 
-	return (void *)dst_ptr;
+    return (void *)dst_ptr;
 }
 
 bool memcmp(void *src, int cmp, int n)
@@ -75,5 +75,5 @@ bool memcmp(void *src, int cmp, int n)
 */
 void *memzero(void *src, size_t n)
 {
-	memset(src, 0x0, n);
+    memset(src, 0x0, n);
 }

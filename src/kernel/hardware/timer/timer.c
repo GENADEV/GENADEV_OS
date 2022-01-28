@@ -31,49 +31,49 @@ static uint32_t s_tickInterval = 1000;
 
 void handle_timer_irq(void)
 {
-	uint32_t cntvct;
+    uint32_t cntvct;
 
-	kassert(s_tickInterval > 0);
+    kassert(s_tickInterval > 0);
 
-	asm volatile(
-		"msr cntv_tval_el0, %1    \n\t"	 // Set timer for in 1 second
-		""
-		"mrs %0, cntvct_el0       \n\t"	 // Read virtual counter
-		: "=r"(cntvct)
-		: "r"(s_tickInterval));
+    asm volatile(
+        "msr cntv_tval_el0, %1    \n\t"	 // Set timer for in 1 second
+        ""
+        "mrs %0, cntvct_el0       \n\t"	 // Read virtual counter
+        : "=r"(cntvct)
+        : "r"(s_tickInterval));
 
-	debug(DBG_BOTH,
-		  "Entered timer IRQ handler.\n"
-		  "...Setting [cntv_tval_el0 = 0x%x]\n"
-		  "......with [cntvct_el0    = 0x%x]\n",
-		  s_tickInterval, cntvct);
+    debug(DBG_BOTH,
+          "Entered timer IRQ handler.\n"
+          "...Setting [cntv_tval_el0 = 0x%x]\n"
+          "......with [cntvct_el0    = 0x%x]\n",
+          s_tickInterval, cntvct);
 }
 
 void timer_init(uint32_t ms_interval)
 {
-	asm volatile("mrs %0, cntfrq_el0" : "=r"(s_counterFrequency));
+    asm volatile("mrs %0, cntfrq_el0" : "=r"(s_counterFrequency));
 
-	s_tickInterval = (s_counterFrequency * ms_interval) / MILLISECONDS_IN_SECONDS;
+    s_tickInterval = (s_counterFrequency * ms_interval) / MILLISECONDS_IN_SECONDS;
 
-	kassert(s_counterFrequency > 0 && s_tickInterval > 0);
+    kassert(s_counterFrequency > 0 && s_tickInterval > 0);
 
-	asm volatile(
-		"msr cntv_tval_el0, %0    \n\t"	 // Initialize EL1 virtual timer value
-		""
-		"mov x1, #1               \n\t"
-		"msr cntv_ctl_el0, x1     \n\t"	 // Enable virtual timer
-		:
-		: "r"(s_tickInterval)
-		: "x1");
+    asm volatile(
+        "msr cntv_tval_el0, %0    \n\t"	 // Initialize EL1 virtual timer value
+        ""
+        "mov x1, #1               \n\t"
+        "msr cntv_ctl_el0, x1     \n\t"	 // Enable virtual timer
+        :
+        : "r"(s_tickInterval)
+        : "x1");
 
-	debug(DBG_BOTH,
-		  "Initializing timer on core 0.\n"
-		  "...Setting [cntv_tval_el0 = 0x%x]\n"
-		  "......with [cntfrq_el0 = 0x%x]\n",
-		  s_tickInterval, s_counterFrequency);
+    debug(DBG_BOTH,
+          "Initializing timer on core 0.\n"
+          "...Setting [cntv_tval_el0 = 0x%x]\n"
+          "......with [cntfrq_el0 = 0x%x]\n",
+          s_tickInterval, s_counterFrequency);
 
-	// Enable core 0's virtual timer interrupt
-	// See BCM2836 Rev 3.4, section on
-	// "Core timers interrupts"
-	*CORE0_TIMER_IRQCNTL = CNTVIRQ_CTL;
+    // Enable core 0's virtual timer interrupt
+    // See BCM2836 Rev 3.4, section on
+    // "Core timers interrupts"
+    *CORE0_TIMER_IRQCNTL = CNTVIRQ_CTL;
 }

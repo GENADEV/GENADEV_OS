@@ -38,35 +38,35 @@ extern smp_core_t core_id;
 
 void main()
 {
-	// initialize mini uart and uart0 driver
-	mini_uart_init();
-	uart0_init();
+    // initialize mini uart and uart0 driver
+    mini_uart_init();
+    uart0_init();
 
-	debug(DBG_BOTH, "GENADEV_OS\n");
+    debug(DBG_BOTH, "GENADEV_OS\n");
 
-	// get current exception level
-	int el = 0;
-	asm volatile(
-		"mrs %0, currentEL\n"
-		"lsr %0, %0, 2\n"
-		: "=r"(el)
-	);
-	debug(DBG_BOTH, "Current EL: %d\n", el);
+    // get current exception level
+    int el = 0;
+    asm volatile(
+        "mrs %0, currentEL\n"
+        "lsr %0, %0, 2\n"
+        : "=r"(el)
+    );
+    debug(DBG_BOTH, "Current EL: %d\n", el);
 
-	irq_init();
-	timer_init(1000);
-	irq_enable();
+    irq_init();
+    timer_init(1000);
+    irq_enable();
 
-	cpu_info();
+    cpu_info();
 
-	// framebuffer_init();
-	// framebuffer_set_background_color(0xFF27DFF8);
-	// printk(0xFF27DFF8, 0xFFF9AC37, "Hello World! The coolest OS out there is obviously %s.", "GENADEV_OS");
+    // framebuffer_init();
+    // framebuffer_set_background_color(0xFF27DFF8);
+    // printk(0xFF27DFF8, 0xFFF9AC37, "Hello World! The coolest OS out there is obviously %s.", "GENADEV_OS");
 
-	for (int i = 3; i != 0; i--)
-		debug(DBG_BOTH, "Found core %d\n", core_id.id);
+    for (int i = 3; i != 0; i--)
+        debug(DBG_BOTH, "Found core %d\n", core_id.id);
 
-	kassert(1 > 2);
+    kassert(1 > 2);
 
-	for (;;) {}
+    for (;;) {}
 }

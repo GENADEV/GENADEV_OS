@@ -22,7 +22,7 @@ smp_core_t core_id;
 
 void smp_test_core(long id)
 {
-	core_id.id = id;
+    core_id.id = id;
 
-	for (;;);
+    for (;;);
 }
