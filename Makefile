@@ -71,7 +71,7 @@ clean:
 	rm -f $(OBJ) $(TARGET_ELF) $(TARGET_FINAL)
 
 format:
-	astyle --mode=c -nA1TfpxgHxbxjxpS $(C_FILES)
+	astyle --mode=c -nA1fpxgHxbxjxpS $(C_FILES)
 
 %.o: %.S
 	@printf " AS\t$<\n";
